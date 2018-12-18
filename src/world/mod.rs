@@ -1,17 +1,19 @@
-use Ray;
-use Intersection;
+use crate::intersection::Intersection;
+use crate::ray::Ray;
+use crate::world::{light::Light, obj::Obj, plane::Plane, triangle::Triangle};
+use image::{GenericImage, ImageBuffer};
 
-pub mod triangle;
-pub mod plane;
 pub mod light;
 pub mod obj;
+pub mod plane;
+pub mod triangle;
 
 pub trait Interceptable {
-    pub fn intercept(&self, ray: Ray) -> Option<(f64, Intersection)>
+    fn intercept(&self, ray: Ray) -> Option<(f64, Intersection)>;
 }
 
 pub struct World {
-    image: ImageBuffer,
+    //image: ImageBuffer,
     elements: Vec<Element>,
 }
 
