@@ -5,3 +5,7 @@ pub struct Triangle {
     point2: Point3<f64>,
     point3: Point3<f64>,
 }
+
+/*impl Interceptable for Triangle {
+    unimplemented!();
+}*/
