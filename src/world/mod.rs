@@ -21,6 +21,7 @@ pub struct World {
     pub width: u32,
     pub height: u32,
     pub elements: Vec<Rc<Box<Interceptable>>>,
+    pub lights: Vec<Light>,
 }
 
 impl World {
@@ -47,9 +48,10 @@ impl World {
     }
 
     pub fn color(&self, ray: Ray) -> Rgba<u8> {
-        if let Some(interception) = self.next_intersection(ray) {
+        if let Some(intersection) = self.next_intersection(ray) {
             // touch something
-            Rgba([255, 255, 255, 0])
+            let color = intersection.color;
+            color
         } else {
             // background color
             Rgba([0, 0, 0, 0])
