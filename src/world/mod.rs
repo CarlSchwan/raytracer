@@ -2,7 +2,7 @@ use crate::intersection::Intersection;
 use crate::ray::Ray;
 use crate::world::{light::Light, obj::Obj, plane::Plane, sphere::Sphere, triangle::Triangle};
 use image::{DynamicImage, GenericImage, ImageBuffer, Rgba};
-use na::{normalize, Vector3, Unit};
+use na::{normalize, Vector3};
 use std::f64;
 use std::path::Path;
 use std::rc::Rc;
@@ -38,9 +38,8 @@ impl World {
                 let xx = (2.0 * ((x as f64 + 0.5) * inv_width) - 1.0) * angle * aspectratio;
                 let yy = (1.0 * 2.0 * ((y as f64 + 0.5) * inv_height)) * angle;
                 let dir = Vector3::new(xx, yy, -1.0);
-                let starting_point = Vector3::new(0.0, 0.0, -1.0); //TODO: choose a starting point
                 normalize(&dir);
-                let ray = Ray { dir:Unit::new_normalize(dir),start:starting_point  };
+                let ray = Ray { dir };
                 let rgb = self.color(ray);
                 img.put_pixel(x, y, rgb);
             }
