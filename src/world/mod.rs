@@ -20,11 +20,19 @@ pub trait Interceptable {
 pub struct World {
     pub width: u32,
     pub height: u32,
-    pub elements: Vec<Rc<Box<Interceptable>>>,
+    pub elements: Vec<Box<Interceptable>>,
     pub lights: Vec<Light>,
 }
 
 impl World {
+    pub fn new(width: u32, height: u32, elements : Vec<Box<Interceptable>>, lights : Vec<Light>) -> Self {
+        World {
+            width,
+            height,
+            elements,
+            lights
+        }
+    }
     pub fn render(&self) -> DynamicImage {
         // algorythm for direction taken from https://www.scratchapixel.com/code.php?id=3&origin=/lessons/3d-basic-rendering/introduction-to-ray-tracing
         let mut img = DynamicImage::new_rgb8(self.width, self.height);
@@ -32,13 +40,14 @@ impl World {
         let inv_height = 1.0 / self.height as f64;
         let fov = 30.0;
         let aspectratio = self.width as f64 / self.height as f64;
-        let angle = (f64::consts::PI * 0.5 * fov / 180.0).tan();
+        let angle = (f64::consts::FRAC_PI_2 * fov / 180.0).tan();
         for x in 0..self.width {
             for y in 0..self.height {
                 let xx = (2.0 * ((x as f64 + 0.5) * inv_width) - 1.0) * angle * aspectratio;
                 let yy = (1.0 * 2.0 * ((y as f64 + 0.5) * inv_height)) * angle;
                 let dir = Vector3::new(xx, yy, -1.0);
-                let starting_point = Vector3::new(0.0, 0.0, -1.0); //TODO: choose a starting point
+                //let starting_point = Vector3::new(self.width as f64 / 2.0, self.height as f64 / 2.0, -1.0); //TODO: choose a starting point
+                let starting_point = Vector3::new(0.0,0.0,0.0); //TODO: choose a starting point
                 normalize(&dir);
                 let ray = Ray { dir:Unit::new_normalize(dir),start:starting_point  };
                 let rgb = self.color(ray);
