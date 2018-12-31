@@ -2,7 +2,7 @@ use crate::intersection::Intersection;
 use crate::ray::Ray;
 use crate::world::{light::Light, obj::Obj, plane::Plane, sphere::Sphere, triangle::Triangle};
 use image::{DynamicImage, GenericImage, ImageBuffer, Rgba};
-use na::{normalize, Vector3, Unit};
+use na::{normalize, Unit, Vector3};
 use std::f64;
 use std::path::Path;
 use std::rc::Rc;
@@ -25,12 +25,17 @@ pub struct World {
 }
 
 impl World {
-    pub fn new(width: u32, height: u32, elements : Vec<Box<Interceptable>>, lights : Vec<Light>) -> Self {
+    pub fn new(
+        width: u32,
+        height: u32,
+        elements: Vec<Box<Interceptable>>,
+        lights: Vec<Light>,
+    ) -> Self {
         World {
             width,
             height,
             elements,
-            lights
+            lights,
         }
     }
     pub fn render(&self) -> DynamicImage {
@@ -47,9 +52,12 @@ impl World {
                 let yy = (1.0 * 2.0 * ((y as f64 + 0.5) * inv_height)) * angle;
                 let dir = Vector3::new(xx, yy, -1.0);
                 //let starting_point = Vector3::new(self.width as f64 / 2.0, self.height as f64 / 2.0, -1.0); //TODO: choose a starting point
-                let starting_point = Vector3::new(0.0,0.0,0.0); //TODO: choose a starting point
+                let starting_point = Vector3::new(0.0, 0.0, 0.0); //TODO: choose a starting point
                 normalize(&dir);
-                let ray = Ray { dir:Unit::new_normalize(dir),start:starting_point  };
+                let ray = Ray {
+                    dir: Unit::new_normalize(dir),
+                    start: starting_point,
+                };
                 let rgb = self.color(ray);
                 img.put_pixel(x, y, rgb);
             }

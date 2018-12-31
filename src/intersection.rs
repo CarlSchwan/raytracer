@@ -1,5 +1,5 @@
-use na::Vector3;
 use image::Rgba;
+use na::Vector3;
 
 pub struct Intersection {
     pub pos: Vector3<f64>,

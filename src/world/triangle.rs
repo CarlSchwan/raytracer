@@ -9,8 +9,8 @@ pub struct Triangle {
     pub b: Vector3<f64>,
     pub c: Vector3<f64>,
     pub color: Rgba<u8>,
-    pub opacity : f64,
-    pub reflection : f64,
+    pub opacity: f64,
+    pub reflection: f64,
 }
 
 impl Interceptable for Triangle {
@@ -38,7 +38,8 @@ impl Interceptable for Triangle {
         }
         // At this stage we can compute t to find out where the intersection point is on the line.
         let t = f * edge2.dot(&q);
-        return if (t > epsylon) // ray intersection
+        return if (t > epsylon)
+        // ray intersection
         {
             let pos = ray.start + ray.dir.unwrap() * t;
             let h = edge1.cross(&edge2);
@@ -46,7 +47,7 @@ impl Interceptable for Triangle {
             let angle = (h.dot(&ray.dir) / (h.norm() * ray.dir.norm())).acos();
 
             let intersection = Intersection {
-                pos:pos,
+                pos: pos,
                 color: self.color,
                 opacity: self.opacity,
                 reflection: self.reflection,
@@ -55,6 +56,6 @@ impl Interceptable for Triangle {
             Some((t, intersection))
         } else {
             None
-        }
+        };
     }
 }
