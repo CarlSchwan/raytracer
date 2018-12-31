@@ -51,7 +51,6 @@ impl World {
                 let xx = (2.0 * ((x as f64 + 0.5) * inv_width) - 1.0) * angle * aspectratio;
                 let yy = (1.0 * 2.0 * ((y as f64 + 0.5) * inv_height)) * angle;
                 let dir = Vector3::new(xx, yy, -1.0);
-                //let starting_point = Vector3::new(self.width as f64 / 2.0, self.height as f64 / 2.0, -1.0); //TODO: choose a starting point
                 let starting_point = Vector3::new(0.0, 0.0, 0.0); //TODO: choose a starting point
                 normalize(&dir);
                 let ray = Ray {
