@@ -6,6 +6,7 @@ use na::{normalize, Unit, Vector3};
 use std::f64;
 use std::path::Path;
 use std::rc::Rc;
+use image::Pixel;
 
 pub mod light;
 pub mod obj;
@@ -58,6 +59,9 @@ impl World {
                     start: starting_point,
                 };
                 let rgb = self.color(ray);
+
+                let rgb = Rgba::from_channels((rgb.channels4().0 * 255.0).floor() as u8, (rgb.channels4().1 * 255.0).floor() as u8, (rgb.channels4().2 * 255.0).floor() as u8, (rgb.channels4().3 * 255.0).floor() as u8);
+
                 img.put_pixel(x, y, rgb);
             }
         }
@@ -89,7 +93,7 @@ impl World {
         interception
     }
 
-    fn color_at_intersection(&self, ray: Ray, intersection: Intersection) -> Rgba<f64> {
+    fn color_at_intersection(&self, ray: Ray, intersection: Intersection) -> Result<Rgba<f64>, &'static str> {
         let mut color = Rgba([0.0, 0.0, 0.0, 1.0]);
         for light in self.lights {
             let shade_ray = Ray { dir: Unit::new_normalize(light.pos - intersection.pos), start: intersection.pos};
