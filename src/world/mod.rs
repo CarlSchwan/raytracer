@@ -99,6 +99,7 @@ impl World {
         let diffuse_reflection = 1.0;
         let specular_reflection = 1.0;
         let ambient_lightning = 1.0;
+        let alpha = 2.0; //shininess constant, should (maybe) be in object/intersection
 
         let mut color = Rgba([0.0, 0.0, 0.0, 1.0]);
         let i_ambient = ambient_reflection * ambient_lightning;
@@ -107,20 +108,19 @@ impl World {
 
         for light in &self.lights {
             let shade_ray = Ray { dir: Unit::new_normalize(light.pos - intersection.pos), start: light.pos};
-            let (r,g,b, _) = light.color.channels4();
-            let light_vec = Vector3::new(r,g,b);
 
             let shade_intersection = self.next_intersection(shade_ray).unwrap();
 
             if (shade_intersection.pos - intersection.pos).norm() < 0.1 {
-                let l_m = -ray.dir;
-                let n_hat = shade_intersection.normal_at_surface;
-                i_diffuse += (l_m.dot(&n_hat) * diffuse_reflection * color2vector(&intersection.color)).component_mul(&light_vec);
+                let l_m = -ray.dir.normalize();
+                let n_hat = shade_intersection.normal_at_surface.normalize();
+                i_diffuse += (l_m.dot(&n_hat) * diffuse_reflection * color2vector(&intersection.color)).component_mul(&color2vector(&light.color));
 
+                let r_hat = (2.0 * l_m.dot(&n_hat) * n_hat - l_m).normalize();
+                let v_hat = ray.start.normalize();
+                //TODO: multiply with shininess factor of ELEMENT!!! (maybe put it in intersection)
+                i_diffuse += specular_reflection * r_hat.dot(&v_hat).powf(alpha) * color2vector(&light.color);
             }
-            //if shade_intersection.pos = light.pos {
-                //color = color + light.color / 3;
-            //}
         }
         Err("implement!")
     }
