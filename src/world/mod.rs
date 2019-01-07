@@ -64,7 +64,7 @@ impl World {
         img
     }
 
-    pub fn color(&self, ray: Ray) -> Rgba<u8> {
+    fn color(&self, ray: Ray) -> Rgba<u8> {
         if let Some(intersection) = self.next_intersection(ray) {
             // touch something
             let color = intersection.color;
@@ -75,7 +75,7 @@ impl World {
         }
     }
 
-    pub fn next_intersection(&self, ray: Ray) -> Option<Intersection> {
+    fn next_intersection(&self, ray: Ray) -> Option<Intersection> {
         let mut max_distance = f64::INFINITY;
         let mut interception = None;
         for element in &self.elements {
@@ -87,5 +87,16 @@ impl World {
             }
         }
         interception
+    }
+
+    fn color_at_intersection(&self, ray: Ray: intersection: Intersection) -> Rgba<u8> {
+        let mut color = Rgba([0, 0, 0, 0]);
+        for light in self.lights {
+            let shade_ray = Ray { dir: Unit::new_normalize(light.pos - intersection.pos), start: intersection.pos};
+            let shade_intersection = next_intersection(shade_ray)?;
+            if shade_intersection.pos = light.pos {
+                color = color + light.color / 3; 
+            }
+        }
     }
 }
