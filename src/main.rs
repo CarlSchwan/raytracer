@@ -1,4 +1,3 @@
-#[macro_use]
 extern crate nalgebra as na;
 
 // imageBuffer
@@ -8,10 +7,8 @@ extern crate image;
 extern crate wavefront_obj;
 
 use crate::world::sphere::Sphere;
-use image::{GenericImage, ImageBuffer, Pixel, Rgba};
+use image::{Pixel, Rgba};
 use na::Vector3;
-use std::io;
-use std::rc::Rc;
 
 mod intersection;
 mod ray;

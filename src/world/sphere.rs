@@ -14,7 +14,7 @@ pub struct Sphere {
 
 impl Interceptable for Sphere {
     fn intercept(&self, ray: &Ray) -> Option<(f64, Intersection)> {
-        let h = (ray.start - self.center); // vector, needs to be summed/normed before utilisation
+        let h = ray.start - self.center; // vector, needs to be summed/normed before utilisation
         let a = 1.0; // scalar
         let b = 2.0 * h.dot(&ray.dir.unwrap()); // scalar
         let c = h.norm_squared() - self.radius.powi(2); // scalar
@@ -67,7 +67,7 @@ impl Interceptable for Sphere {
             //delta is approximatively 0
             let lambda = -b / (2.0 * a);
 
-            if (lambda > epsylon) {
+            if lambda > epsylon {
                 let angle = std::f64::consts::PI / 4.0; //because there is only one intersection : the ray is tangeant to intersection
                 let pos = ray.start + ray.dir.unwrap() * lambda;
                 let intersection = Intersection {

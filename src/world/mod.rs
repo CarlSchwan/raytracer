@@ -1,11 +1,9 @@
 use crate::intersection::Intersection;
 use crate::ray::Ray;
-use crate::world::{light::Light, obj::Obj, plane::Plane, sphere::Sphere, triangle::Triangle};
-use image::{DynamicImage, GenericImage, ImageBuffer, Rgba};
+use crate::world::light::Light;
+use image::{DynamicImage, GenericImage, Rgba};
 use na::{normalize, Unit, Vector3};
 use std::f64;
-use std::path::Path;
-use std::rc::Rc;
 use image::Pixel;
 
 pub mod light;
@@ -99,7 +97,7 @@ impl World {
             let shade_ray = Ray { dir: Unit::new_normalize(light.pos - intersection.pos), start: intersection.pos};
             let shade_intersection = next_intersection(shade_ray)?;
             if shade_intersection.pos = light.pos {
-                color = color + light.color / 3; 
+                color = color + light.color.map(|x| x / 3.0); 
             }
         }
     }

@@ -38,7 +38,7 @@ impl Interceptable for Triangle {
         }
         // At this stage we can compute t to find out where the intersection point is on the line.
         let t = f * edge2.dot(&q);
-        return if (t > epsylon)
+        return if t > epsylon
         // ray intersection
         {
             let pos = ray.start + ray.dir.unwrap() * t;
