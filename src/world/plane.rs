@@ -7,7 +7,7 @@ use na::{Unit, Vector3};
 pub struct Plane {
     pub normal: Unit<Vector3<f64>>,
     pub d: f64,
-    pub color: Rgba<u8>,
+    pub color: Rgba<f64>,
     pub opacity: f64,
     pub reflection: f64,
 }

@@ -8,7 +8,7 @@ pub struct Triangle {
     pub a: Vector3<f64>,
     pub b: Vector3<f64>,
     pub c: Vector3<f64>,
-    pub color: Rgba<u8>,
+    pub color: Rgba<f64>,
     pub opacity: f64,
     pub reflection: f64,
 }
