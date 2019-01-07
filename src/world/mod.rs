@@ -118,7 +118,7 @@ impl World {
 
                 let r_hat = (2.0 * l_m.dot(&n_hat) * n_hat - l_m).normalize();
                 let v_hat = ray.start.normalize();
-                //TODO: multiply with shininess factor of ELEMENT!!! (maybe put it in intersection)
+                //TODO: multiply with shininess (Reflektionsfaktor) factor of ELEMENT!!! (maybe put it in intersection)
                 i_diffuse += specular_reflection * r_hat.dot(&v_hat).powf(alpha) * color2vector(&light.color);
             }
         }
