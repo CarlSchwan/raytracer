@@ -29,7 +29,7 @@ fn main() {
     elements.push(Box::new(Sphere {
         center: Vector3::new(0.0, -2.0, 5.0),
         radius: 1.0,
-        color: Rgba::from_channels(255, 0, 0, 255),
+        color: Rgba::from_channels(1.0, 0.0, 0.0, 1.0),
         opacity: 1.0,
         reflection: 0.0,
     }));
