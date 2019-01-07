@@ -3,7 +3,7 @@ use na::Vector3;
 
 pub struct Light {
     pub color: Rgba<u8>,
-    pub position: Vector3<f64>,
+    pub pos: Vector3<f64>,
     pub intensity: f64,
 }
 
