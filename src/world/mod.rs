@@ -101,9 +101,9 @@ impl World {
         let ambient_lightning = 1.0;
 
         let mut color = Rgba([0.0, 0.0, 0.0, 1.0]);
-        let I_ambient = ambient_reflection * ambient_lightning;
+        let i_ambient = ambient_reflection * ambient_lightning;
 
-        let mut I_diffuse = Vector3::new(0.0, 0.0, 0.0);
+        let mut i_diffuse = Vector3::new(0.0, 0.0, 0.0);
 
         for light in &self.lights {
             let shade_ray = Ray { dir: Unit::new_normalize(light.pos - intersection.pos), start: light.pos};
@@ -113,9 +113,9 @@ impl World {
             let shade_intersection = self.next_intersection(shade_ray).unwrap();
 
             if (shade_intersection.pos - intersection.pos).norm() < 0.1 {
-                let L_m = -ray.dir;
-                let N_hat = shade_intersection.normal_at_surface;
-                I_diffuse += (L_m.dot(&N_hat) * diffuse_reflection * color2vector(&intersection.color)).component_mul(&light_vec);
+                let l_m = -ray.dir;
+                let n_hat = shade_intersection.normal_at_surface;
+                i_diffuse += (l_m.dot(&n_hat) * diffuse_reflection * color2vector(&intersection.color)).component_mul(&light_vec);
 
             }
             //if shade_intersection.pos = light.pos {
