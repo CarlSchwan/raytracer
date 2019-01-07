@@ -89,7 +89,7 @@ impl World {
         interception
     }
 
-    fn color_at_intersection(&self, ray: Ray: intersection: Intersection) -> Rgba<f64> {
+    fn color_at_intersection(&self, ray: Ray, intersection: Intersection) -> Rgba<f64> {
         let mut color = Rgba([0.0, 0.0, 0.0, 1.0]);
         for light in self.lights {
             let shade_ray = Ray { dir: Unit::new_normalize(light.pos - intersection.pos), start: intersection.pos};
