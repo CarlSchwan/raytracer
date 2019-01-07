@@ -46,8 +46,11 @@ impl Interceptable for Triangle {
             //TODO: do we need to take this angle modulo to get a value in [0, pi/4] ?
             let angle = (h.dot(&ray.dir) / (h.norm() * ray.dir.norm())).acos();
 
+            let normal = if angle.abs() > std::f64::consts::FRAC_PI_4 { h } else { -h };
+
             let intersection = Intersection {
                 pos: pos,
+                normal_at_surface: normal,
                 color: self.color,
                 opacity: self.opacity,
                 reflection: self.reflection,

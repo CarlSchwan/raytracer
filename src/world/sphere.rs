@@ -54,6 +54,7 @@ impl Interceptable for Sphere {
 
             let intersection = Intersection {
                 pos: pos,
+                normal_at_surface: -pos_to_center,
                 color: self.color,
                 opacity: self.opacity,
                 reflection: self.reflection,
@@ -72,6 +73,7 @@ impl Interceptable for Sphere {
                 let pos = ray.start + ray.dir.unwrap() * lambda;
                 let intersection = Intersection {
                     pos: pos,
+                    normal_at_surface: self.center - pos,
                     color: self.color,
                     opacity: self.opacity,
                     reflection: self.reflection,

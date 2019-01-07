@@ -5,6 +5,7 @@ use image::{DynamicImage, GenericImage, Rgba};
 use na::{normalize, Unit, Vector3};
 use std::f64;
 use image::Pixel;
+use crate::helpers::color2vector;
 
 pub mod light;
 pub mod obj;
@@ -91,14 +92,36 @@ impl World {
         interception
     }
 
+    //THIS IS PHONG!
     fn color_at_intersection(&self, ray: Ray, intersection: Intersection) -> Result<Rgba<f64>, &'static str> {
+        //TODO: choose beautiful constants
+        let ambient_reflection = 1.0;
+        let diffuse_reflection = 1.0;
+        let specular_reflection = 1.0;
+        let ambient_lightning = 1.0;
+
         let mut color = Rgba([0.0, 0.0, 0.0, 1.0]);
-        for light in self.lights {
-            let shade_ray = Ray { dir: Unit::new_normalize(light.pos - intersection.pos), start: intersection.pos};
-            let shade_intersection = next_intersection(shade_ray)?;
-            if shade_intersection.pos = light.pos {
-                color = color + light.color.map(|x| x / 3.0); 
+        let I_ambient = ambient_reflection * ambient_lightning;
+
+        let mut I_diffuse = Vector3::new(0.0, 0.0, 0.0);
+
+        for light in &self.lights {
+            let shade_ray = Ray { dir: Unit::new_normalize(light.pos - intersection.pos), start: light.pos};
+            let (r,g,b, _) = light.color.channels4();
+            let light_vec = Vector3::new(r,g,b);
+
+            let shade_intersection = self.next_intersection(shade_ray).unwrap();
+
+            if (shade_intersection.pos - intersection.pos).norm() < 0.1 {
+                let L_m = -ray.dir;
+                let N_hat = shade_intersection.normal_at_surface;
+                I_diffuse += (L_m.dot(&N_hat) * diffuse_reflection * color2vector(&intersection.color)).component_mul(&light_vec);
+
             }
+            //if shade_intersection.pos = light.pos {
+                //color = color + light.color / 3;
+            //}
         }
+        Err("implement!")
     }
 }

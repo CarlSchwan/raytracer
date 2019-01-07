@@ -10,6 +10,7 @@ use crate::world::sphere::Sphere;
 use image::{Pixel, Rgba};
 use na::Vector3;
 
+mod helpers;
 mod intersection;
 mod ray;
 mod world;
