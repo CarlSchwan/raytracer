@@ -7,6 +7,7 @@ extern crate image;
 extern crate wavefront_obj;
 
 use crate::world::sphere::Sphere;
+use crate::world::light::Light;
 use image::{Pixel, Rgba};
 use na::Vector3;
 
@@ -25,15 +26,16 @@ fn main() {
 
     let mut elements: std::vec::Vec<std::boxed::Box<world::Interceptable>> = Vec::new();
     elements.push(Box::new(Sphere {
-        center: Vector3::new(0.0, -2.0, 5.0),
+        center: Vector3::new(0.0, 0.0, 5.0),
         radius: 1.0,
-        color: Rgba::from_channels(1.0, 0.0, 0.0, 1.0),
+        color: Rgba::from_channels(0.3, 0.3, 0.3, 1.0),
         opacity: 1.0,
         reflection: 0.0,
     }));
     let mut lights = Vec::new();
+    lights.push(Light::new(10.0, 10.0, 10.0));
 
-    let w = world::World::new(100, 100, elements, lights);
+    let w = world::World::new(300, 200, elements, lights);
     //w.render().save(io::stdout(), image::ImageFormat::PNG);
     let image = w.render();
     image.save("./output.png");
