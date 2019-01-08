@@ -16,12 +16,12 @@ impl Interceptable for Sphere {
     fn intercept(&self, ray: &Ray) -> Option<(f64, Intersection)> {
         let h = ray.start - self.center; // vector, needs to be summed/normed before utilisation
         let a = 1.0; // scalar
-        let b = 2.0 * h.dot(&ray.dir.unwrap()); // scalar
-        let c = h.norm_squared() - self.radius.powi(2); // scalar
+        let b = 2.0 * ray.dir.unwrap().dot(&h); // scalar
+        let c = h.dot(&h) - self.radius.powi(2); // scalar
 
-        let delta = b.powi(2) - 4.0 * a * c;
+        let delta = b.powi(2) - 4.0 * c;
 
-        let epsylon = 0.0001; //TODO: adjust precision (do we need more/less?)
+        let epsylon = 0.01; //TODO: adjust precision (do we need more/less?)
 
         return if delta > epsylon {
             // 2 points : take the smallest positive lambda
@@ -30,16 +30,25 @@ impl Interceptable for Sphere {
             // distance between ray start and intersection point
 
             let lambda_1 = -b + delta.sqrt();
-            let lambda_1 = lambda_1 / (2.0 * a);
+            let lambda_1 = lambda_1 / (2.0);
+            let lambda_1 = -lambda_1;
 
             let lambda_2 = -b - delta.sqrt();
-            let lambda_2 = lambda_2 / (2.0 * a);
+            let lambda_2 = lambda_2 / (2.0);
+            let lambda_2 = -lambda_2;
 
-            let min_pos_lambda = if lambda_1 > epsylon && lambda_2 > epsylon {
-                lambda_1.min(lambda_2)
-            } else {
-                lambda_1.max(lambda_2)
-            };
+            let min_pos_lambda_opt =
+                if lambda_1 > epsylon {
+                    Some(if lambda_2 > epsylon {lambda_1.min(lambda_2)} else {lambda_1})
+                } else {
+                    if lambda_2 > epsylon {Some(lambda_2)} else {None}
+                };
+
+            if let None = min_pos_lambda_opt {
+                return None;
+            }
+
+            let min_pos_lambda = min_pos_lambda_opt.unwrap();
 
             let pos = ray.start + ray.dir.unwrap() * min_pos_lambda;
 
