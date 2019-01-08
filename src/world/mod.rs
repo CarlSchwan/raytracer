@@ -72,13 +72,14 @@ impl World {
         if let Some(intersection) = self.next_intersection(&ray) {
             // touch something
             intersection.get_color(ray.dir.into_inner(), self)
+            //self.color_at_intersection(ray, intersection).unwrap()
         } else {
             // background color
             Rgba([0.0, 0.0, 0.0, 1.0])
         }
     }
 
-    fn next_intersection(&self, ray: &Ray) -> Option<Intersection> {
+    pub fn next_intersection(&self, ray: &Ray) -> Option<Intersection> {
         let mut max_distance = f64::INFINITY;
         let mut interception = None;
         for element in &self.elements {
@@ -114,7 +115,7 @@ impl World {
                 if (shade_intersection.pos - intersection.pos).norm() < 0.1 {
                     let l_m = - shade_ray.dir.normalize();
                     let n_hat = shade_intersection.normal_at_surface.normalize();
-                    i_diffuse += 2.0 * (l_m.dot(&n_hat) * diffuse_reflection * color2vector(&intersection.color)).component_mul(&color2vector(&light.color));
+                    i_diffuse += 2.0 * (l_m.dot(&n_hat) * diffuse_reflection * color2vector(&intersection.get_color(ray.dir.into_inner(), self))).component_mul(&color2vector(&light.color));
 
                     let r_hat = (2.0 * l_m.dot(&n_hat) * n_hat - l_m).normalize();
                     let v_hat = -ray.dir.normalize();

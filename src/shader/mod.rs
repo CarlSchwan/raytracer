@@ -9,3 +9,5 @@ pub trait Shader {
 
 pub mod monochrome_shader;
 pub mod additive_shader;
+pub mod ambient_shader;
+pub mod diffuse_shader;
