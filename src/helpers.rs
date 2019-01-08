@@ -1,5 +1,5 @@
 use na::Vector3;
-use image::{Rgba, Pixel};
+use image::{Rgba, Rgb, Pixel};
 
 pub fn color2vector(c : &Rgba<f64>) -> Vector3<f64> {
     let (r,g,b,a) = c.channels4();
@@ -7,5 +7,5 @@ pub fn color2vector(c : &Rgba<f64>) -> Vector3<f64> {
 }
 
 pub fn vector2color(v : &Vector3<f64>) -> Rgba<f64> {
-    *Rgba::from_slice(v.as_slice())
+    Rgb::from_slice(v.as_slice()).to_rgba()
 }
