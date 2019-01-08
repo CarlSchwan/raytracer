@@ -54,7 +54,7 @@ impl Interceptable for Sphere {
             let intersection = Intersection {
                 pos: pos,
                 normal_at_surface: -pos_to_center,
-                shader: self.shader,
+                shader: &self.shader,
                 pos_on_surface: unimplemented![],
             };
 
@@ -72,7 +72,7 @@ impl Interceptable for Sphere {
                 let intersection = Intersection {
                     pos: pos,
                     normal_at_surface: self.center - pos,
-                    shader: self.shader,
+                    shader: &self.shader,
                     pos_on_surface: unimplemented![],
                 };
                 Some((lambda, intersection))

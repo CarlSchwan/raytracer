@@ -32,7 +32,7 @@ impl Interceptable for Plane {
         let intersection = Intersection {
             pos: intersection_pos,
             normal_at_surface: normal,
-            shader: self.shader,
+            shader: &self.shader,
             pos_on_surface: unimplemented![],
         };
         return Some((intersection_distance, intersection));

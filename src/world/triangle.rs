@@ -50,7 +50,7 @@ impl Interceptable for Triangle {
             let intersection = Intersection {
                 pos: pos,
                 normal_at_surface: normal,
-                shader: self.shader,
+                shader: &self.shader,
                 pos_on_surface: unimplemented![],
             };
 
