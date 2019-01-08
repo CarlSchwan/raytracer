@@ -6,6 +6,7 @@ use na::{normalize, Unit, Vector3};
 use std::f64;
 use image::Pixel;
 use crate::helpers::color2vector;
+use crate::shader::*;
 
 pub mod light;
 pub mod obj;
@@ -68,21 +69,20 @@ impl World {
     }
 
     fn color(&self, ray: Ray) -> Rgba<f64> {
-        if let Some(intersection) = self.next_intersection(ray) {
+        if let Some(intersection) = self.next_intersection(&ray) {
             // touch something
-            let color = intersection.color;
-            color
+            intersection.get_color(ray.dir.into_inner(), self)
         } else {
             // background color
             Rgba([0.0, 0.0, 0.0, 1.0])
         }
     }
 
-    fn next_intersection(&self, ray: Ray) -> Option<Intersection> {
+    fn next_intersection(&self, ray: &Ray) -> Option<Intersection> {
         let mut max_distance = f64::INFINITY;
         let mut interception = None;
         for element in &self.elements {
-            if let Some((distance, intercept)) = element.intercept(&ray) {
+            if let Some((distance, intercept)) = element.intercept(ray) {
                 if distance < max_distance {
                     max_distance = distance;
                     interception = Some(intercept);
@@ -92,36 +92,37 @@ impl World {
         interception
     }
 
-    //THIS IS PHONG!
-    fn color_at_intersection(&self, ray: Ray, intersection: Intersection) -> Result<Rgba<f64>, &'static str> {
-        //TODO: choose beautiful constants
-        let ambient_reflection = 1.0;
-        let diffuse_reflection = 1.0;
-        let specular_reflection = 1.0;
-        let ambient_lightning = 1.0;
-        let alpha = 2.0; //shininess constant, should (maybe) be in object/intersection
-
-        let mut color = Rgba([0.0, 0.0, 0.0, 1.0]);
-        let i_ambient = ambient_reflection * ambient_lightning;
-
-        let mut i_diffuse = Vector3::new(0.0, 0.0, 0.0);
-
-        for light in &self.lights {
-            let shade_ray = Ray { dir: Unit::new_normalize(light.pos - intersection.pos), start: light.pos};
-
-            let shade_intersection = self.next_intersection(shade_ray).unwrap();
-
-            if (shade_intersection.pos - intersection.pos).norm() < 0.1 {
-                let l_m = -ray.dir.normalize();
-                let n_hat = shade_intersection.normal_at_surface.normalize();
-                i_diffuse += (l_m.dot(&n_hat) * diffuse_reflection * color2vector(&intersection.color)).component_mul(&color2vector(&light.color));
-
-                let r_hat = (2.0 * l_m.dot(&n_hat) * n_hat - l_m).normalize();
-                let v_hat = ray.start.normalize();
-                //TODO: multiply with shininess (Reflektionsfaktor) factor of ELEMENT!!! (maybe put it in intersection)
-                i_diffuse += specular_reflection * r_hat.dot(&v_hat).powf(alpha) * color2vector(&light.color);
-            }
-        }
-        Err("implement!")
-    }
+//    //THIS IS PHONG!
+//    fn color_at_intersection(&self, ray: Ray, intersection: Intersection) -> Result<Rgba<f64>, &'static str> {
+//        //TODO: choose beautiful constants
+//        let ambient_reflection = 1.0;
+//        let diffuse_reflection = 1.0;
+//        let specular_reflection = 1.0;
+//        let ambient_lightning = 1.0;
+//        let alpha = 2.0; //shininess constant, should (maybe) be in object/intersection
+//
+//        let mut color = Rgba([0.0, 0.0, 0.0, 1.0]);
+//        let i_ambient = ambient_reflection * ambient_lightning;
+//
+//        let mut i_diffuse = Vector3::new(0.0, 0.0, 0.0);
+//
+//        for light in &self.lights {
+//            let shade_ray = Ray { dir: Unit::new_normalize(light.pos - intersection.pos), start: light.pos};
+//
+//            let shade_intersection = self.next_intersection(shade_ray).unwrap();
+//
+//            if (shade_intersection.pos - intersection.pos).norm() < 0.1 {
+//                let l_m = -ray.dir.normalize();
+//                let n_hat = shade_intersection.normal_at_surface.normalize();
+//                let 
+//                i_diffuse += (l_m.dot(&n_hat) * diffuse_reflection * color2vector(&intersection.color)).component_mul(&color2vector(&light.color));
+//
+//                let r_hat = (2.0 * l_m.dot(&n_hat) * n_hat - l_m).normalize();
+//                let v_hat = ray.start.normalize();
+//                //TODO: multiply with shininess (Reflektionsfaktor) factor of ELEMENT!!! (maybe put it in intersection)
+//                i_diffuse += specular_reflection * r_hat.dot(&v_hat).powf(alpha) * color2vector(&light.color);
+//            }
+//        }
+//        Err("implement!")
+//    }
 }

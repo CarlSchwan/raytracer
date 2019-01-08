@@ -3,13 +3,12 @@ use crate::ray::Ray;
 use crate::world::Interceptable;
 use image::Rgba;
 use na::Vector3;
+use crate::shader::Shader;
 
 pub struct Sphere {
     pub center: Vector3<f64>,
     pub radius: f64,
-    pub color: Rgba<f64>,
-    pub opacity: f64,
-    pub reflection: f64,
+    pub shader: Box<Shader>,
 }
 
 impl Interceptable for Sphere {
@@ -55,9 +54,8 @@ impl Interceptable for Sphere {
             let intersection = Intersection {
                 pos: pos,
                 normal_at_surface: -pos_to_center,
-                color: self.color,
-                opacity: self.opacity,
-                reflection: self.reflection,
+                shader: self.shader,
+                pos_on_surface: unimplemented![],
             };
 
             Some((min_pos_lambda, intersection))
@@ -74,9 +72,8 @@ impl Interceptable for Sphere {
                 let intersection = Intersection {
                     pos: pos,
                     normal_at_surface: self.center - pos,
-                    color: self.color,
-                    opacity: self.opacity,
-                    reflection: self.reflection,
+                    shader: self.shader,
+                    pos_on_surface: unimplemented![],
                 };
                 Some((lambda, intersection))
             } else {

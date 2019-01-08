@@ -1,6 +1,7 @@
 use crate::intersection::Intersection;
 use crate::ray::Ray;
 use crate::world::Interceptable;
+use crate::shader::Shader;
 use image::Rgba;
 use na::Vector3;
 
@@ -8,9 +9,7 @@ pub struct Triangle {
     pub a: Vector3<f64>,
     pub b: Vector3<f64>,
     pub c: Vector3<f64>,
-    pub color: Rgba<f64>,
-    pub opacity: f64,
-    pub reflection: f64,
+    pub shader: Box<Shader>,
 }
 
 impl Interceptable for Triangle {
@@ -51,9 +50,8 @@ impl Interceptable for Triangle {
             let intersection = Intersection {
                 pos: pos,
                 normal_at_surface: normal,
-                color: self.color,
-                opacity: self.opacity,
-                reflection: self.reflection,
+                shader: self.shader,
+                pos_on_surface: unimplemented![],
             };
 
             Some((t, intersection))
