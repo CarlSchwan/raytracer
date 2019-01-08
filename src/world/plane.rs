@@ -3,7 +3,7 @@ use crate::ray::Ray;
 use crate::world::Interceptable;
 use crate::shader::Shader;
 use image::Rgba;
-use na::{Unit, Vector3};
+use na::{Unit, Vector3, Vector2};
 
 pub struct Plane {
     pub normal: Unit<Vector3<f64>>, // Vektor, senkrecht zur Ebene
@@ -33,7 +33,7 @@ impl Interceptable for Plane {
             pos: intersection_pos,
             normal_at_surface: normal,
             shader: &self.shader,
-            pos_on_surface: unimplemented![],
+            pos_on_surface: Vector2::new(0.0,0.0),//TODO
         };
         return Some((intersection_distance, intersection));
     }

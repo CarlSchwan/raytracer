@@ -3,7 +3,7 @@ use crate::ray::Ray;
 use crate::world::Interceptable;
 use crate::shader::Shader;
 use image::Rgba;
-use na::Vector3;
+use na::{Vector3, Vector2};
 
 pub struct Triangle {
     pub a: Vector3<f64>,
@@ -51,7 +51,7 @@ impl Interceptable for Triangle {
                 pos: pos,
                 normal_at_surface: normal,
                 shader: &self.shader,
-                pos_on_surface: unimplemented![],
+                pos_on_surface: Vector2::new(0.0,0.0),
             };
 
             Some((t, intersection))

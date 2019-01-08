@@ -2,7 +2,7 @@ use crate::intersection::Intersection;
 use crate::ray::Ray;
 use crate::world::Interceptable;
 use image::Rgba;
-use na::Vector3;
+use na::{Vector3, Vector2};
 use crate::shader::Shader;
 
 pub struct Sphere {
@@ -55,7 +55,7 @@ impl Interceptable for Sphere {
                 pos: pos,
                 normal_at_surface: -pos_to_center,
                 shader: &self.shader,
-                pos_on_surface: unimplemented![],
+                pos_on_surface: Vector2::new(0.0,0.0),//TODO
             };
 
             Some((min_pos_lambda, intersection))
@@ -73,7 +73,7 @@ impl Interceptable for Sphere {
                     pos: pos,
                     normal_at_surface: self.center - pos,
                     shader: &self.shader,
-                    pos_on_surface: unimplemented![],
+                    pos_on_surface: Vector2::new(0.0,0.0),//TODO
                 };
                 Some((lambda, intersection))
             } else {
