@@ -8,6 +8,7 @@ extern crate wavefront_obj;
 
 use crate::world::sphere::*;
 use crate::world::plane::*;
+use crate::world::light::Light;
 use image::{Pixel, Rgba};
 use na::{Vector3, Unit};
 use crate::shader::monochrome_shader::*;
@@ -41,6 +42,7 @@ fn main() {
         shader: Box::new(blue_shader),
     }));
     let mut lights = Vec::new();
+    lights.push(Light::new(10.0, 10.0, 10.0));
 
     let w = world::World::new(400, 400, elements, lights);
     //w.render().save(io::stdout(), image::ImageFormat::PNG);
