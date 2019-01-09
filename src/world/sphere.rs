@@ -22,7 +22,6 @@ impl Interceptable for Sphere {
         let delta = b.powi(2) - 4.0 * c;
 
         if delta >= 0.0 {
-
             let mut lambdas : Vec<f64> = Vec::new();
             lambdas.push((-b + delta.sqrt()) / 2.0);
             lambdas.push((-b - delta.sqrt()) / 2.0);
