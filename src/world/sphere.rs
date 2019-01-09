@@ -37,7 +37,7 @@ impl Interceptable for Sphere {
                     return Some((lambda,
                                  Intersection {
                                     pos: pos,
-                                    normal_at_surface: -pos_to_center,
+                                    normal_at_surface: pos_to_center,
                                     shader: &self.shader,
                                     pos_on_surface: Vector2::new(0.0,0.0),//TODO
                         }));
