@@ -39,8 +39,10 @@ impl Interceptable for Sphere {
                                  Intersection {
                                     pos: pos,
                                     normal_at_surface: -pos_to_center,
-                                    shader: &self.shader,
-                                    pos_on_surface: Vector2::new(0.0,0.0),//TODO
+                                    color: self.color,
+                                    reflection: self.reflection,
+                                    opacity: 1.0
+
                         }));
                 }
             }
