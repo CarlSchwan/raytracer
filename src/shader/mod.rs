@@ -9,7 +9,7 @@ use crate::helpers::*;
 
 pub trait Shader {
     fn get_appereance_for(&self, intersection_pos: Vector3<f64>, ray_dir: Vector3<f64>, surface_normal: Vector3<f64>,
-                          world: &World, surface_pos: Vector2<f64>) -> Rgba<f64>;
+                          world: &World, surface_pos: Vector2<f64>, recursion_depth: u64) -> Rgba<f64>;
 }
 
 pub fn get_phong(color: Rgba<f64>) -> Box<Shader> {
@@ -26,3 +26,4 @@ pub mod additive_shader;
 pub mod ambient_shader;
 pub mod diffuse_shader;
 pub mod specular_shader;
+pub mod mirror_shader;
