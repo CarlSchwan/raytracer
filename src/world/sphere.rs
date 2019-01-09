@@ -19,7 +19,7 @@ impl Interceptable for Sphere {
         let b = 2.0 * ray.dir.unwrap().dot(&h); // scalar
         let c = h.dot(&h) - self.radius.powi(2); // scalar
 
-        let delta = b.powi(2) - 4.0 * a * c;
+        let delta = b.powi(2) - 4.0 * c;
 
         if delta >= 0.0 {
 
