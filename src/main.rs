@@ -47,7 +47,7 @@ fn main() {
         shader: Box::new(red_diffuse_shader3),
     }));
     let mut lights = Vec::new();
-    lights.push(Light::new(0.0, -10.0, 6.0));
+    lights.push(Light::new(0.0, -10.0, 6.0, Rgba::from_channels(1.0, 0.5, 1.0, 1.0)));
 
     let w = world::World::new(400, 400, elements, lights);
     //w.render().save(io::stdout(), image::ImageFormat::PNG);
