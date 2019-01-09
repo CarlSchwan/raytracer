@@ -3,26 +3,25 @@ use crate::ray::Ray;
 use crate::world::Interceptable;
 use image::Rgba;
 use na::{Vector3, Vector2};
+use crate::shader::Shader;
 use std::f64;
 
 pub struct Sphere {
     pub center: Vector3<f64>,
     pub radius: f64,
-    pub color: Rgba<f64>,
-    pub opacity: f64,
-    pub reflection: f64,
+    pub shader: Box<Shader>,
 }
 
 impl Interceptable for Sphere {
     fn intercept(&self, ray: &Ray) -> Option<(f64, Intersection)> {
         let h = ray.start - self.center; // vector, needs to be summed/normed before utilisation
+
         let b = 2.0 * ray.dir.unwrap().dot(&h); // scalar
         let c = h.dot(&h) - self.radius.powi(2); // scalar
 
         let delta = b.powi(2) - 4.0 * c;
 
         if delta >= 0.0 {
-
             let mut lambdas : Vec<f64> = Vec::new();
             lambdas.push((-b + delta.sqrt()) / 2.0);
             lambdas.push((-b - delta.sqrt()) / 2.0);
@@ -38,11 +37,9 @@ impl Interceptable for Sphere {
                     return Some((lambda,
                                  Intersection {
                                     pos: pos,
-                                    normal_at_surface: -pos_to_center,
-                                    color: self.color,
-                                    reflection: self.reflection,
-                                    opacity: 1.0
-
+                                    normal_at_surface: pos_to_center,
+                                    shader: &self.shader,
+                                    pos_on_surface: Vector2::new(0.0,0.0),//TODO
                         }));
                 }
             }
