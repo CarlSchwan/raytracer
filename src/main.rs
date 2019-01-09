@@ -13,6 +13,9 @@ use image::{Pixel, Rgba};
 use na::{Vector3, Unit};
 use crate::shader::monochrome_shader::*;
 use crate::shader::diffuse_shader::DiffuseShader;
+use crate::shader::specular_shader::SpecularShader;
+use crate::shader::*;
+use crate::shader::mirror_shader::MirrorShader;
 
 mod helpers;
 mod intersection;
@@ -22,29 +25,30 @@ mod shader;
 
 fn main() {
 
-    let green_shader = MonochromeShader {color: Rgba::from_channels(0.0, 1.0, 0.0, 1.0)};
-    let red_shader = MonochromeShader {color: Rgba::from_channels(1.0, 0.0, 0.0, 1.0)};
-    let blue_shader = MonochromeShader {color: Rgba::from_channels(0.0, 0.0, 1.0, 1.0)};
-
-    let red_diffuse_shader = DiffuseShader { color: Rgba::from_channels(1.0, 0.0, 0.0, 1.0), reflection: 0.5};
-    let red_diffuse_shader2 = DiffuseShader { color: Rgba::from_channels(1.0, 0.0, 0.0, 1.0), reflection: 0.5};
-    let red_diffuse_shader3 = DiffuseShader { color: Rgba::from_channels(1.0, 0.0, 0.0, 1.0), reflection: 0.5};
+    let green_shader = get_phong(Rgba::from_channels(0.0, 1.0, 0.0, 1.0));
+    let red_shader = get_phong(Rgba::from_channels(1.0, 0.0, 0.0, 1.0));
+    let blue_shader = get_phong(Rgba::from_channels(0.0, 0.0, 1.0, 1.0));
 
     let mut elements: std::vec::Vec<std::boxed::Box<world::Interceptable>> = Vec::new();
     elements.push(Box::new(Sphere {
         center: Vector3::new(0.0, 1.0, -6.0),
         radius: 1.0,
-        shader: Box::new(red_diffuse_shader),
+        shader: red_shader,
     }));
     elements.push(Box::new(Sphere {
         center: Vector3::new(1.0, -1.0, -5.0),
         radius: 1.0,
-        shader: Box::new(red_diffuse_shader2),
+        shader: green_shader,
+    }));
+    elements.push(Box::new(Sphere {
+        center: Vector3::new(2.0, 0.0, -9.0),
+        radius: 1.0,
+        shader: Box::new(MirrorShader{}),
     }));
     elements.push(Box::new(Plane {
         normal: Unit::new_normalize(Vector3::new(0.0, 1.0, 0.0)),
         d: 1.0,
-        shader: Box::new(red_diffuse_shader3),
+        shader: blue_shader,
     }));
     let mut lights = Vec::new();
     lights.push(Light::new(0.0, -10.0, 6.0, Rgba::from_channels(1.0, 0.5, 1.0, 1.0)));
