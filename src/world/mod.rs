@@ -107,7 +107,7 @@ impl World {
         let mut i_diffuse = Vector3::new(0.0, 0.0, 0.0);
 
         for light in &self.lights {
-            let shade_ray = Ray { dir: Unit::new_normalize(light.pos - intersection.pos), start: light.pos};
+            let shade_ray = Ray { dir: Unit::new_normalize(intersection.pos - light.pos), start: light.pos};
 
             let shade_intersection = self.next_intersection(shade_ray).unwrap();
 
