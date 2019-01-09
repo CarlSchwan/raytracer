@@ -7,6 +7,8 @@ use crate::helpers::*;
 pub struct AdditiveShader {
     pub shader1: Box<Shader>,
     pub shader2: Box<Shader>,
+    pub alpha1: f64,
+    pub alpha2: f64,
 }
 
 impl Shader for AdditiveShader {
