@@ -71,8 +71,8 @@ impl World {
     fn color(&self, ray: Ray) -> Rgba<f64> {
         if let Some(intersection) = self.next_intersection(&ray) {
             // touch something
-            intersection.get_color(ray.dir.into_inner(), self)
-            //self.color_at_intersection(ray, intersection).unwrap()
+            //intersection.get_color(ray.dir.into_inner(), self)
+            self.color_at_intersection(ray, intersection).unwrap()
         } else {
             // background color
             Rgba([0.0, 0.0, 0.0, 1.0])

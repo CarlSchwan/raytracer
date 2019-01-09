@@ -1,6 +1,7 @@
 use image::{Pixel, Rgba};
 use na::Vector3;
 
+#[derive(Debug)]
 pub struct Light {
     pub color: Rgba<f64>,
     pub pos: Vector3<f64>,

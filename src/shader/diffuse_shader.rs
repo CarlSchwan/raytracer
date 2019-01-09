@@ -15,7 +15,7 @@ impl Shader for DiffuseShader {
         let mut i_diffuse = Vector3::new(0.0, 0.0, 0.0);
 
         for light in &world.lights {
-            let shade_ray = Ray { dir: Unit::new_normalize(light.pos - intersection_pos), start: light.pos};
+            let shade_ray = Ray { dir: Unit::new_normalize(intersection_pos -light.pos), start: light.pos};
 
             if let Some(shade_intersection) = world.next_intersection(&shade_ray) {
                 if (shade_intersection.pos - intersection_pos).norm() < 0.1 {
