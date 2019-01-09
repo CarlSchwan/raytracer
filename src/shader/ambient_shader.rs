@@ -4,9 +4,9 @@ use image::Rgba;
 use crate::world::World;
 use crate::helpers::*;
 
-struct AmbientShader {
-    reflection: f64,
-    light: Rgba<f64>,
+pub struct AmbientShader {
+    pub reflection: f64,
+    pub light: Rgba<f64>,
 }
 
 impl Shader for AmbientShader {
