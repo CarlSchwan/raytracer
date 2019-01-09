@@ -6,6 +6,7 @@ use na::{normalize, Unit, Vector3};
 use std::f64;
 use image::Pixel;
 use crate::helpers::{color2vector, vector2color};
+use crate::world::{sphere::Sphere, triangle::Triangle, plane::Plane};
 
 pub mod light;
 pub mod obj;
@@ -17,10 +18,28 @@ pub trait Interceptable {
     fn intercept(&self, ray: &Ray) -> Option<(f64, Intersection)>;
 }
 
+#[derive(Serialize, Deserialize, Debug)]
+pub enum InterceptableEnum {
+    Sphere(Sphere),
+    Triangle(Triangle),
+    Plane(Plane),
+}
+
+impl Interceptable for InterceptableEnum {
+    fn intercept(&self, ray: &Ray) -> Option<(f64, Intersection)> {
+        match self {
+            InterceptableEnum::Sphere(sphere) => sphere.intercept(ray),
+            InterceptableEnum::Triangle(triangle) => triangle.intercept(ray),
+            InterceptableEnum::Plane(plane) => plane.intercept(ray),
+        }
+    }
+}
+
+#[derive(Serialize, Deserialize, Debug)]
 pub struct World {
     pub width: u32,
     pub height: u32,
-    pub elements: Vec<Box<Interceptable>>,
+    pub elements: Vec<InterceptableEnum>,
     pub lights: Vec<Light>,
 }
 
@@ -28,7 +47,7 @@ impl World {
     pub fn new(
         width: u32,
         height: u32,
-        elements: Vec<Box<Interceptable>>,
+        elements: Vec<InterceptableEnum>,
         lights: Vec<Light>,
     ) -> Self {
         World {

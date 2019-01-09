@@ -4,6 +4,7 @@ use crate::world::Interceptable;
 use image::Rgba;
 use na::{Unit, Vector3};
 
+#[derive(Serialize, Deserialize, Debug)]
 pub struct Plane {
     pub normal: Unit<Vector3<f64>>, // Vektor, senkrecht zur Ebene
     pub d: f64,                 // Distanz der Ebene zum Ursprung

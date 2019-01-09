@@ -2,9 +2,10 @@ use crate::intersection::Intersection;
 use crate::ray::Ray;
 use crate::world::Interceptable;
 use image::Rgba;
-use na::{Vector3, Vector2};
+use na::Vector3;
 use std::f64;
 
+#[derive(Serialize, Deserialize, Debug)]
 pub struct Sphere {
     pub center: Vector3<f64>,
     pub radius: f64,

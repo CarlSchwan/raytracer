@@ -4,6 +4,7 @@ use crate::world::Interceptable;
 use image::Rgba;
 use na::Vector3;
 
+#[derive(Serialize, Deserialize, Debug)]
 pub struct Triangle {
     pub a: Vector3<f64>,
     pub b: Vector3<f64>,

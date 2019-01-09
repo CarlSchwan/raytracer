@@ -6,10 +6,17 @@ extern crate image;
 // parse wavefront_obj
 extern crate wavefront_obj;
 
+#[macro_use]
+extern crate serde_derive;
+
+extern crate serde;
+extern crate serde_json;
+
 use crate::world::sphere::Sphere;
 use crate::world::light::Light;
 use image::{Pixel, Rgba};
 use na::Vector3;
+use crate::world::InterceptableEnum;
 
 mod helpers;
 mod intersection;
@@ -24,8 +31,8 @@ fn main() {
         }
     }*/
 
-    let mut elements: std::vec::Vec<std::boxed::Box<world::Interceptable>> = Vec::new();
-    elements.push(Box::new(Sphere {
+    let mut elements = Vec::new();
+    elements.push(InterceptableEnum::Sphere(Sphere {
         center: Vector3::new(0.0, 0.0, 5.0),
         radius: 1.0,
         color: Rgba::from_channels(0.3, 0.3, 0.3, 1.0),
@@ -36,7 +43,9 @@ fn main() {
     lights.push(Light::new(10.0, 10.0, 10.0));
 
     let w = world::World::new(300, 200, elements, lights);
+    let string = serde_json::to_string(&w).unwrap();
     //w.render().save(io::stdout(), image::ImageFormat::PNG);
     let image = w.render();
     image.save("./output.png");
+    println!("{}", string); 
 }
