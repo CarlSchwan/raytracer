@@ -21,7 +21,7 @@ impl Shader for DiffuseShader {
                 if (shade_intersection.pos - intersection_pos).norm() < 0.1 {
                     let l_m = shade_ray.dir.normalize();
                     let n_hat = shade_intersection.normal_at_surface.normalize();
-                    i_diffuse += 2.0 * (l_m.dot(&n_hat) * self.reflection * color2vector(&self.color)).component_mul(&color2vector(&light.color));
+                    i_diffuse += 2.0 * (-l_m.dot(&n_hat) * self.reflection * color2vector(&self.color)).component_mul(&color2vector(&light.color));
                 }
             }
         }
