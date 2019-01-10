@@ -1,4 +1,4 @@
-use image::{Pixel, Rgba};
+use image::{Rgba};
 use na::Vector3;
 
 #[derive(Debug)]

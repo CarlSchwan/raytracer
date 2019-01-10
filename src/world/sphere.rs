@@ -1,7 +1,6 @@
 use crate::intersection::Intersection;
 use crate::ray::Ray;
 use crate::world::Interceptable;
-use image::Rgba;
 use na::{Vector3, Vector2};
 use crate::shader::Shader;
 use std::f64;
@@ -16,7 +15,7 @@ impl Interceptable for Sphere {
     fn intercept(&self, ray: &Ray) -> Option<(f64, Intersection)> {
         let h = ray.start - self.center; // vector, needs to be summed/normed before utilisation
 
-        let b = 2.0 * ray.dir.unwrap().dot(&h); // scalar
+        let b = 2.0 * ray.dir.into_inner().dot(&h); // scalar
         let c = h.dot(&h) - self.radius.powi(2); // scalar
 
         let delta = b.powi(2) - 4.0 * c;
@@ -32,7 +31,7 @@ impl Interceptable for Sphere {
             match min(pos_lambdas) {
                 None => { return None; }
                 Some(lambda) => {
-                    let pos = ray.start + ray.dir.unwrap() * lambda;
+                    let pos = ray.start + ray.dir.into_inner() * lambda;
                     let pos_to_center = pos - self.center;
                     return Some((lambda,
                                  Intersection {

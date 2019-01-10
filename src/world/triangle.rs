@@ -2,7 +2,6 @@ use crate::intersection::Intersection;
 use crate::ray::Ray;
 use crate::world::Interceptable;
 use crate::shader::Shader;
-use image::Rgba;
 use na::{Vector3, Vector2};
 
 pub struct Triangle {
@@ -40,7 +39,7 @@ impl Interceptable for Triangle {
         return if t > epsylon
         // ray intersection
         {
-            let pos = ray.start + ray.dir.unwrap() * t;
+            let pos = ray.start + ray.dir.into_inner() * t;
             let h = edge1.cross(&edge2);
             //TODO: do we need to take this angle modulo to get a value in [0, pi/4] ?
             let angle = (h.dot(&ray.dir) / (h.norm() * ray.dir.norm())).acos();

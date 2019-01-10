@@ -11,7 +11,7 @@ pub struct DiffuseShader {
 }
 
 impl Shader for DiffuseShader {
-    fn get_appereance_for(&self, intersection_pos: Vector3<f64>, ray_dir: Vector3<f64>, surface_normal: Vector3<f64>, world: &World, surface_pos: Vector2<f64>, recursion_depth: u64) -> Rgba<f64> {
+    fn get_appereance_for(&self, intersection_pos: Vector3<f64>, _ray_dir: Vector3<f64>, _surface_normal: Vector3<f64>, world: &World, _surface_pos: Vector2<f64>, _recursion_depth: u64) -> Rgba<f64> {
         let mut i_diffuse = Vector3::new(0.0, 0.0, 0.0);
 
         for light in &world.lights {

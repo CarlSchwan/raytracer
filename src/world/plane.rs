@@ -2,7 +2,6 @@ use crate::intersection::Intersection;
 use crate::ray::Ray;
 use crate::world::Interceptable;
 use crate::shader::Shader;
-use image::Rgba;
 use na::{Unit, Vector3, Vector2};
 
 pub struct Plane {
@@ -13,21 +12,21 @@ pub struct Plane {
 
 impl Interceptable for Plane {
     fn intercept(&self, ray: &Ray) -> Option<(f64, Intersection)> {
-        let convergence_rate = ray.dir.unwrap().dot(&self.normal.unwrap());
+        let convergence_rate = ray.dir.into_inner().dot(&self.normal.into_inner());
         if convergence_rate == 0.0 {
             return None;
         }
 
-        let intersection_distance = (self.d - self.normal.unwrap().dot(&ray.start)) / convergence_rate;
+        let intersection_distance = (self.d - self.normal.into_inner().dot(&ray.start)) / convergence_rate;
         if intersection_distance < 0.0 {
             return None;
         }
 
-        let intersection_pos = intersection_distance * ray.dir.unwrap() + ray.start;
+        let intersection_pos = intersection_distance * ray.dir.into_inner() + ray.start;
         let normal = if convergence_rate > 0.0 {
-                            - self.normal.unwrap()
+                            - self.normal.into_inner()
                         } else {
-                            self.normal.unwrap()
+                            self.normal.into_inner()
                         };
         let intersection = Intersection {
             pos: intersection_pos,

@@ -5,8 +5,6 @@ use image::{DynamicImage, GenericImage, Rgba};
 use na::{normalize, Unit, Vector3};
 use std::f64;
 use image::Pixel;
-use crate::helpers::{color2vector, vector2color};
-use crate::shader::*;
 
 pub mod light;
 pub mod obj;

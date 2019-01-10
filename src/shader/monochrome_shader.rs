@@ -6,7 +6,7 @@ pub struct MonochromeShader {
 }
 
 impl Shader for MonochromeShader {
-    fn get_appereance_for(&self, intersection_pos: Vector3<f64>, ray_dir: Vector3<f64>, surface_normal: Vector3<f64>, world: &World, surface_pos: Vector2<f64>, recursion_depth: u64) -> Rgba<f64> {
+    fn get_appereance_for(&self, _intersection_pos: Vector3<f64>, _ray_dir: Vector3<f64>, _surface_normal: Vector3<f64>, _world: &World, _surface_pos: Vector2<f64>, _recursion_depth: u64) -> Rgba<f64> {
         return self.color;
     }
 }
