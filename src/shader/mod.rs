@@ -8,7 +8,7 @@ use crate::shader::additive_shader::*;
 use crate::helpers::*;
 
 pub trait Shader {
-    fn get_appereance_for(&self, intersection_pos: Vector3<f64>, ray_dir: Vector3<f64>, surface_normal: Vector3<f64>,
+    fn get_appearance_for(&self, intersection_pos: Vector3<f64>, ray_dir: Vector3<f64>, surface_normal: Vector3<f64>,
                           world: &World, surface_pos: Vector2<f64>, recursion_depth: u64) -> Rgba<f64>;
 }
 

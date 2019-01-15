@@ -9,7 +9,7 @@ pub struct MirrorShader {
 } 
 
 impl Shader for MirrorShader {
-    fn get_appereance_for(&self, intersection_pos: Vector3<f64>, ray_dir: Vector3<f64>, surface_normal: Vector3<f64>, world: &World, _surface_pos: Vector2<f64>, recursion_depth: u64) -> Rgba<f64> {
+    fn get_appearance_for(&self, intersection_pos: Vector3<f64>, ray_dir: Vector3<f64>, surface_normal: Vector3<f64>, world: &World, _surface_pos: Vector2<f64>, recursion_depth: u64) -> Rgba<f64> {
         if recursion_depth==0 {
             return Rgba::from_channels(0.0, 0.0, 0.0, 1.0);
         }

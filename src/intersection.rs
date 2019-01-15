@@ -12,7 +12,7 @@ pub struct Intersection<'a> {
 
 impl<'a> Intersection<'a> {
     pub fn get_color(&self, ray_dir: Vector3<f64>, world: &World, recursion_depth: u64) -> Rgba<f64> {
-        self.shader.get_appereance_for(self.pos, ray_dir, self.normal_at_surface, world, self.pos_on_surface, recursion_depth)
+        self.shader.get_appearance_for(self.pos, ray_dir, self.normal_at_surface, world, self.pos_on_surface, recursion_depth)
     }
 }
 
