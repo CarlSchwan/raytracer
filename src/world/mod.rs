@@ -2,12 +2,11 @@ use crate::intersection::Intersection;
 use crate::ray::Ray;
 use crate::world::light::Light;
 use image::{DynamicImage, GenericImage, Rgba};
-use na::{normalize, Unit, Vector3};
+use na::{Matrix, Unit, Vector3};
 use std::f64;
 use image::Pixel;
 
 pub mod light;
-pub mod obj;
 pub mod plane;
 pub mod sphere;
 pub mod triangle;
@@ -51,7 +50,7 @@ impl World {
                 let yy = (2.0 * ((y as f64 + 0.5) * inv_height) -1.) * vertical_half_canvas_size;
                 let dir = Vector3::new(xx, yy, -1.0);
                 let starting_point = Vector3::new(0.0, 0.0, 0.0); //TODO: choose a starting point and dir
-                normalize(&dir);
+                Matrix::normalize(&dir);
                 let ray = Ray {
                     dir: Unit::new_normalize(dir),
                     start: starting_point,
