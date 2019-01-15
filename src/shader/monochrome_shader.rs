@@ -1,12 +1,13 @@
-use image::Rgba;
-use crate::shader::*;
+use na::{Vector3, Vector2};
+use crate::shader::Shader;
+use crate::world::World;
 
 pub struct MonochromeShader {
-    pub color: Rgba<f64>,
+    pub color: Vector3<f64>,
 }
 
 impl Shader for MonochromeShader {
-    fn get_appearance_for(&self, _intersection_pos: Vector3<f64>, _ray_dir: Vector3<f64>, _surface_normal: Vector3<f64>, _world: &World, _surface_pos: Vector2<f64>, _recursion_depth: u64) -> Rgba<f64> {
-        return self.color;
+    fn get_appearance_for(&self, _intersection_pos: Vector3<f64>, _ray_dir: Vector3<f64>, _surface_normal: Vector3<f64>, _world: &World, _surface_pos: Vector2<f64>, _recursion_depth: u64) -> Vector3<f64> {
+        self.color
     }
 }
