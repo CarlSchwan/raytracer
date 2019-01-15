@@ -2,9 +2,8 @@ use crate::intersection::Intersection;
 use crate::ray::Ray;
 use crate::world::light::Light;
 use image::{DynamicImage, GenericImage, Rgba};
-use na::{Matrix, Unit, Vector3};
+use na::{Unit, Vector3};
 use std::f64;
-use image::Pixel;
 
 pub mod light;
 pub mod plane;
@@ -48,16 +47,13 @@ impl World {
             for y in 0..self.height {
                 let xx = (2.0 * ((x as f64 + 0.5) * inv_width) - 1.0) * vertical_half_canvas_size * aspectratio;
                 let yy = (2.0 * ((y as f64 + 0.5) * inv_height) -1.) * vertical_half_canvas_size;
-                let dir = Vector3::new(xx, yy, -1.0);
+                let dir = Vector3::new(xx, yy, -1.0).normalize();
                 let starting_point = Vector3::new(0.0, 0.0, 0.0); //TODO: choose a starting point and dir
-                Matrix::normalize(&dir);
                 let ray = Ray {
                     dir: Unit::new_normalize(dir),
                     start: starting_point,
                 };
                 let rgb = self.color(ray, 10);
-
-                let rgb = Rgba::from_channels((rgb.channels4().0 * 255.0).floor() as u8, (rgb.channels4().1 * 255.0).floor() as u8, (rgb.channels4().2 * 255.0).floor() as u8, (rgb.channels4().3 * 255.0).floor() as u8);
 
                 img.put_pixel(x, y, rgb);
             }
@@ -65,13 +61,22 @@ impl World {
         img
     }
 
-    pub fn color(&self, ray: Ray, recursion_depth: u64) -> Rgba<f64> {
+    pub fn color(&self, ray: Ray, recursion_depth: u64) -> Rgba<u8> {
         if let Some(intersection) = self.next_intersection(&ray) {
             // touch something
             intersection.get_color(ray.dir.into_inner(), self, recursion_depth)
         } else {
             // background color
-            Rgba([0.0, 0.0, 0.0, 1.0])
+            Rgba([0, 0, 0, 255])
+        }
+    }
+
+    pub fn appearance(&self, ray: Ray, recursion_depth: u64) -> Vector3<f64> {
+        if let Some(intersection) = self.next_intersection(&ray) {
+            // touch something
+            intersection.get_appearance(ray.dir.into_inner(), self, recursion_depth)
+        } else {
+            Vector3::new(0.0,0.0,0.0)
         }
     }
 

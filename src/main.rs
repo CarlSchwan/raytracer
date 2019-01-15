@@ -9,7 +9,6 @@ extern crate wavefront_obj;
 use crate::world::sphere::*;
 use crate::world::plane::*;
 use crate::world::light::Light;
-use image::{Pixel, Rgba};
 use na::{Vector3, Unit};
 use crate::shader::*;
 use crate::shader::mirror_shader::MirrorShader;
@@ -72,9 +71,9 @@ fn main() {
         elements.append(&mut parse_obj_file(argument).expect("parse error"));
     }
 
-    let green_shader = get_phong(Rgba::from_channels(0.0, 1.0, 0.0, 1.0));
-    let red_shader = get_phong(Rgba::from_channels(1.0, 0.0, 0.0, 1.0));
-    let blue_shader = get_phong(Rgba::from_channels(0.0, 0.0, 1.0, 1.0));
+    let green_shader = get_phong(Vector3::new(0.0, 1.0, 0.0));
+    let red_shader = get_phong(Vector3::new(1.0, 0.0, 0.0));
+    let blue_shader = get_phong(Vector3::new(0.0, 0.0, 1.0));
 
     elements.push(Box::new(Sphere {
         center: Vector3::new(0.0, 1.0, -6.0),
@@ -99,10 +98,10 @@ fn main() {
         shader: blue_shader,
     }));
     let mut lights = Vec::new();
-    lights.push(Light::new(0.0, -10.0, 6.0, Rgba::from_channels(1.0, 0.5, 1.0, 1.0)));
+    lights.push(Light::new(0.0, -10.0, 6.0, Vector3::new(1.0, 0.5, 1.0)));
 
     let w = world::World::new(1200, 800, elements, lights);
     //w.render().save(io::stdout(), image::ImageFormat::PNG);
     let image = w.render();
-    image.save("./output.png");
+    image.save("./output.png").expect("Could not save image!");
 }
