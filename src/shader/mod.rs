@@ -34,3 +34,4 @@ pub mod diffuse_shader;
 pub mod specular_shader;
 pub mod mirror_shader;
 pub mod multiplicative_shader;
+pub mod chess_shader;
