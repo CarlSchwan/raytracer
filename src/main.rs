@@ -54,7 +54,7 @@ fn parse_obj_file(path: String) -> Result<std::vec::Vec<std::boxed::Box<world::I
                         let vertices_c = object.vertices[w.0];
                         let c = Vector3::new(vertices_c.x, vertices_c.y, vertices_c.z);
 
-                        elements.push(Box::new(world::triangle::Triangle { a, b, c, shader: get_phong(Rgba::from_channels(0.0, 1.0, 0.0, 1.0)) }));
+                        elements.push(Box::new(world::triangle::Triangle { a, b, c, shader: get_phong(Vector3::new(0.0, 1.0, 0.0)) }));
                     },
                     _ => (),
                 };
