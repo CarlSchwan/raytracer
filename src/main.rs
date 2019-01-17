@@ -13,10 +13,15 @@ mod error;
 use crate::world::sphere::*;
 use crate::world::plane::*;
 use crate::world::light::Light;
-use image::{Pixel, Rgba};
 use na::{Vector3, Unit};
+use crate::shader::monochrome_shader::*;
+use crate::shader::diffuse_shader::DiffuseShader;
+use crate::shader::specular_shader::SpecularShader;
 use crate::shader::*;
 use crate::shader::mirror_shader::MirrorShader;
+use crate::shader::chess_shader::ChessShader;
+
+use wavefront_obj::obj::*;
 use std::env;
 use crate::obj::FileParser;
 use crate::error::Error;
@@ -32,9 +37,11 @@ fn main() -> Result<(), Error> {
     let mut elements = file_parser.elements;
 
     // add some spheres
-    let green_shader = get_phong(Rgba::from_channels(0.0, 1.0, 0.0, 1.0));
-    let red_shader = get_phong(Rgba::from_channels(1.0, 0.0, 0.0, 1.0));
-    let blue_shader = get_phong(Rgba::from_channels(0.0, 0.0, 1.0, 1.0));
+    let green_shader = get_phong(Vector3::new(0.0, 1.0, 0.0));
+    let green_check_shader = Box::new(ChessShader{shader: green_shader, color:Vector3::new(1.0,1.0,0.0), size:1.0});
+    let green_shader = get_phong(Vector3::new(0.0, 1.0, 0.0));
+    let red_shader = get_phong(Vector3::new(1.0, 0.0, 0.0));
+    let blue_shader = get_phong(Vector3::new(0.0, 0.0, 1.0));
 
     elements.push(Box::new(Sphere {
         center: Vector3::new(0.0, 1.0, -6.0),
@@ -56,16 +63,15 @@ fn main() -> Result<(), Error> {
     elements.push(Box::new(Plane {
         normal: Unit::new_normalize(Vector3::new(0.0, 1.0, 0.0)),
         d: 1.0,
-        shader: blue_shader,
+        shader: green_check_shader,
     }));
 
     // add light
     let mut lights = Vec::new();
-    lights.push(Light::new(0.0, -10.0, 6.0, Rgba::from_channels(1.0, 0.5, 1.0, 1.0)));
+    lights.push(Light::new(0.0, -10.0, 6.0, Vector3::new(1.0, 0.5, 1.0)));
 
     let w = world::World::new(1200, 800, elements, lights);
     let image = w.render();
     image.save("./output.png")?;
-
     Ok(())
 }

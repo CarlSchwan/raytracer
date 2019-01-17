@@ -73,8 +73,8 @@ impl FileParser {
                                 a,
                                 b,
                                 c,
-                                shader: get_phong(Rgba::from_channels(0.0, 1.0, 0.0, 1.0)),
-                            }));
+                                shader: get_phong(Vector3::new(0.0, 1.0, 0.0)
+                            )}));
                         }
                         _ => (),
                     };
