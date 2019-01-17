@@ -4,8 +4,6 @@ use crate::world::World;
 use crate::ray::Ray;
 
 pub struct SpecularShader {
-        pub reflection : f64,
-        pub shininess: f64,
         pub alpha: f64,
 }
 
@@ -24,7 +22,7 @@ impl Shader for SpecularShader {
                     let v_hat = -ray_dir.normalize();
                     //TODO: put shininess(Reflektionsfaktor) in intersection
                     let rv = r_hat.dot(&v_hat);
-                    i_specular += self.reflection * (if rv > 0.0 {rv} else {0.0}).powf(self.alpha) * light.color * self.shininess;
+                    i_specular += (if rv > 0.0 {rv} else {0.0}).powf(self.alpha) * light.color;
                 }
             }
         }

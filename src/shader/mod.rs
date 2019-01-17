@@ -21,10 +21,10 @@ pub trait Shader {
 }
 
 pub fn get_phong(color: Vector3<f64>) -> Box<Shader> {
-    let diffuse_shader : Box<Shader> = Box::new(DiffuseShader { color: color, reflection: 0.5 });
-    let specular_shader = SpecularShader { reflection: 1.0 , shininess: 1.0 , alpha: 10.0 };
-    let ambient_shader = AmbientShader { reflection: 0.5, light: Vector3::new(0.1, 0.1, 0.1)};
-    return diffuse_shader + specular_shader + ambient_shader;
+    let diffuse_shader : Box<Shader> = Box::new(DiffuseShader { color: color});
+    let specular_shader = SpecularShader { alpha: 10.0 };
+    let ambient_shader : Box<Shader> = Box::new(AmbientShader { light: Vector3::new(0.1, 0.1, 0.1)});
+    return 0.5 * diffuse_shader + specular_shader + 0.5 * ambient_shader;
 }
 
 pub mod monochrome_shader;
