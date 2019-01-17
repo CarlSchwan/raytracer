@@ -14,12 +14,12 @@ pub struct Triangle {
 impl Interceptable for Triangle {
     // Shamelessly stolen from https://en.wikipedia.org/wiki/M%C3%B6ller%E2%80%93Trumbore_intersection_algorithm
     fn intercept(&self, ray: &Ray) -> Option<(f64, Intersection)> {
-        let epsylon = 0.0001;
+        let epsilon = 0.0001;
         let edge1 = self.b - self.a;
         let edge2 = self.c - self.a;
         let h = ray.dir.cross(&edge2);
         let a = edge1.dot(&h);
-        if a > -epsylon && a < epsylon {
+        if a > -epsilon && a < epsilon {
             // This ray is parallel to this triangle.
             return None;
         }
@@ -36,15 +36,13 @@ impl Interceptable for Triangle {
         }
         // At this stage we can compute t to find out where the intersection point is on the line.
         let t = f * edge2.dot(&q);
-        return if t > epsylon
+        return if t > epsilon
         // ray intersection
         {
             let pos = ray.start + ray.dir.into_inner() * t;
             let h = edge1.cross(&edge2);
-            //TODO: do we need to take this angle modulo to get a value in [0, pi/4] ?
-            let angle = (h.dot(&ray.dir) / (h.norm() * ray.dir.norm())).acos();
 
-            let normal = if angle.abs() > std::f64::consts::FRAC_PI_4 { h } else { -h };
+            let normal = if h.dot(&ray.dir) < 0.0 { h } else { -h };
 
             let intersection = Intersection {
                 pos: pos,
