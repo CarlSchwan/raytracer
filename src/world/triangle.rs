@@ -19,7 +19,7 @@ impl Interceptable for Triangle {
         let edge2 = self.c - self.a;
         let h = ray.dir.cross(&edge2);
         let a = edge1.dot(&h);
-        if a > -epsilon && a < epsilon {
+        if a.abs() < epsilon {
             // This ray is parallel to this triangle.
             return None;
         }
