@@ -1,7 +1,7 @@
 use std::fs::File;
 use std::io::Read;
 use crate::world;
-use crate::shader::{Shader, get_phong, specular_shader::SpecularShader, diffuse_shader::DiffuseShader, ambient_shader::AmbientShader};
+use crate::shader::{Shader, get_phong, specular_shader::SpecularShader, diffuse_shader::DiffuseShader, ambient_shader::AmbientShader, mirror_shader::MirrorShader};
 use crate::world::triangle::Triangle;
 use wavefront_obj::obj::Primitive;
 use wavefront_obj::obj::parse as obj_parse;
@@ -74,8 +74,8 @@ impl FileParser {
                                 let mat = self.materials.get(name).expect("Material don't exist");
                                 material_to_shader(mat)
                             } else {
-                                get_phong(Vector3::new(0.0, 1.0, 0.0))
-                            };
+                                Ok(get_phong(Vector3::new(0.0, 1.0, 0.0)))
+                            }?;
 
                             self.elements.push(Box::new(Triangle { a, b, c, shader}));
                         }
@@ -111,7 +111,7 @@ fn material_to_shader(material: &Material) -> Result<Box<Shader>, Error> {
         Illumination::Ambient => Ok(ambient_shader),
         Illumination::AmbientDiffuse => Ok(0.5 * diffuse_shader +  0.5 * ambient_shader),
         Illumination::AmbientDiffuseSpecular  => Ok(0.5 * diffuse_shader + specular_shader + 0.5 * ambient_shader),
-        Illumination::Reflection|Illumination::ReflectionFresnel => Ok(Box::new(MirrorShader { initial_step: 1.0 })) // TODO should not be the same
-        _ => Err(Error)
+        Illumination::Reflection =>  Ok(Box::new(MirrorShader { initial_step: 1.0 })),
+        _ => Err(Error::from("Illumination not yet supported")),
     }
 }
