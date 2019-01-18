@@ -17,7 +17,7 @@ fn my_mod(a:f64, b:f64) -> f64 {
 
 impl Shader for ChessShader {
     fn get_appearance_for(&self, _intersection_pos: Vector3<f64>, _ray_dir: Vector3<f64>, _surface_normal: Vector3<f64>, _world: &World, _surface_pos: Vector2<f64>, _recursion_depth: u64) -> Vector3<f64> {
-        let modulo = (_surface_pos * self.size).map(|x| if my_mod(x,2.0) <= 1.0 {0} else {1});
+        let modulo = (_surface_pos / self.size).map(|x| if my_mod(x,2.0) <= 1.0 {0} else {1});
         let chooser = modulo.dot(&modulo);
         return if chooser == 0 || chooser == 2 {
             self.shader1.get_appearance_for(_intersection_pos, _ray_dir, _surface_normal, _world, _surface_pos, _recursion_depth)
