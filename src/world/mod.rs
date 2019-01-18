@@ -56,7 +56,7 @@ impl World {
                 };
                 let rgb = self.color(ray, 10);
 
-                img.put_pixel(x, y, rgb);
+                img.put_pixel(x, self.height - y -1, rgb);
             }
         }
         img
