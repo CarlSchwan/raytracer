@@ -38,7 +38,6 @@ fn main() -> Result<(), Error> {
 
     // add some spheres
     let green_shader = get_phong(Vector3::new(0.0, 1.0, 0.0));
-    let green_check_shader = Box::new(ChessShader{shader: green_shader, color:Vector3::new(1.0,1.0,0.0), size:1.0});
     let green_shader = get_phong(Vector3::new(0.0, 1.0, 0.0));
     let red_shader = get_phong(Vector3::new(1.0, 0.0, 0.0));
     let blue_shader = get_phong(Vector3::new(0.0, 0.0, 1.0));
@@ -63,7 +62,7 @@ fn main() -> Result<(), Error> {
     elements.push(Box::new(Plane {
         normal: Unit::new_normalize(Vector3::new(0.0, 1.0, 0.0)),
         d: 1.0,
-        shader: green_check_shader,
+        shader: blue_shader,
     }));
 
     // add light
