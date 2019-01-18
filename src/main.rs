@@ -33,17 +33,17 @@ fn main() {
 
     let mut elements: std::vec::Vec<std::boxed::Box<world::Interceptable>> = Vec::new();
     elements.push(Box::new(Sphere {
-        center: Vector3::new(0.0, 1.0, -6.0),
+        center: Vector3::new(0.0, 1.0, 6.0),
         radius: 1.0,
         shader: red_shader,
     }));
     elements.push(Box::new(Sphere {
-        center: Vector3::new(1.0, -1.0, -5.0),
+        center: Vector3::new(1.0, -1.0, 5.0),
         radius: 1.0,
         shader: green_shader,
     }));
     elements.push(Box::new(Sphere {
-        center: Vector3::new(2.0, 0.0, -9.0),
+        center: Vector3::new(2.0, 0.0, 9.0),
         radius: 1.0,
         shader: Box::new(MirrorShader{
             initial_step: 0.001,
@@ -59,7 +59,9 @@ fn main() {
 
 	let cam = Camera {width: 300,
 					  height: 150,
-					  roll:0.0, pitch: 0.0, yaw: 0.0,
+					  roll:-0.2, // down-up
+					  pitch: 0.2, //right-left
+					  yaw: 0.2, //rotation counterclockwise-clockwise
 					  pos: Vector3::new(0.0,0.0,0.0),
 					  vertical_viewangle:40.0,
 					 };
