@@ -2,11 +2,10 @@ use image::Rgba;
 use nalgebra::{Vector3, Vector2};
 use crate::world::World;
 use crate::shader::specular_shader::*;
-use crate::shader::ambient_shader::*;
+use crate::shader::monochrome_shader::*;
 use crate::shader::diffuse_shader::*;
-use crate::shader::additive_shader::*;
+use crate::shader::chess_shader::*;
 use crate::helpers::*;
-use std::ops::Add;
 
 pub trait Shader {
     fn get_appearance_for(&self, intersection_pos: Vector3<f64>, ray_dir: Vector3<f64>, surface_normal: Vector3<f64>,
@@ -23,8 +22,14 @@ pub trait Shader {
 pub fn get_phong(color: Vector3<f64>) -> Box<Shader> {
     let diffuse_shader : Box<Shader> = Box::new(DiffuseShader { color: color});
     let specular_shader = SpecularShader { alpha: 10.0 };
-    let ambient_shader : Box<Shader> = Box::new(AmbientShader { light: Vector3::new(0.1, 0.1, 0.1)});
+    let ambient_shader : Box<Shader> = Box::new(MonochromeShader { color: Vector3::new(0.1, 0.1, 0.1)});
     return 0.5 * diffuse_shader + specular_shader + 0.5 * ambient_shader;
+}
+
+pub fn get_bw_chess() -> Box<Shader> {
+	let black_shader = Box::new(MonochromeShader { color: Vector3::new(0.0, 0.0, 0.0) });
+    let white_shader = Box::new(MonochromeShader { color: Vector3::new(1.0, 1.0, 1.0) });
+    Box::new(ChessShader{shader1: black_shader, shader2: white_shader, size:1.0})
 }
 
 pub mod monochrome_shader;
