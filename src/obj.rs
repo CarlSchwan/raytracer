@@ -103,13 +103,15 @@ fn color_to_vec(color: Color) -> Vector3<f64> {
     Vector3::new(color.r, color.g, color.b)
 }
 
-fn material_to_shader(material: &Material) -> Box<Shader> {
+fn material_to_shader(material: &Material) -> Result<Box<Shader>, Error> {
     let diffuse_shader : Box<Shader> = Box::new(DiffuseShader { color: color_to_vec(material.color_diffuse) });
     let specular_shader = SpecularShader { alpha: 10.0 }; // TODO FIXME use material.color_diffuse
     let ambient_shader : Box<Shader> = Box::new(AmbientShader { light: color_to_vec(material.color_ambient) });
     match material.illumination {
-        Illumination::Ambient => ambient_shader,
-        Illumination::AmbientDiffuse => 0.5 * diffuse_shader +  0.5 * ambient_shader,
-        Illumination::AmbientDiffuseSpecular  => 0.5 * diffuse_shader + specular_shader + 0.5 * ambient_shader,
+        Illumination::Ambient => Ok(ambient_shader),
+        Illumination::AmbientDiffuse => Ok(0.5 * diffuse_shader +  0.5 * ambient_shader),
+        Illumination::AmbientDiffuseSpecular  => Ok(0.5 * diffuse_shader + specular_shader + 0.5 * ambient_shader),
+        Illumination::Reflection|Illumination::ReflectionFresnel => Ok(Box::new(MirrorShader { initial_step: 1.0 })) // TODO should not be the same
+        _ => Err(Error)
     }
 }
