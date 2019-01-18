@@ -15,7 +15,7 @@ impl Shader for DiffuseShader {
             let shade_ray = Ray { dir: Unit::new_normalize(intersection_pos -light.pos), start: light.pos};
 
             if let Some(shade_intersection) = world.next_intersection(&shade_ray) {
-                if (shade_intersection.pos - intersection_pos).norm() < 0.1 {
+                if (shade_intersection.pos - intersection_pos).norm() < 0.001 {
                     let l_m = shade_ray.dir.normalize();
                     let n_hat = shade_intersection.normal_at_surface.normalize();
                     i_diffuse += 2.0 * (-l_m.dot(&n_hat) * self.color).component_mul(&light.color);
