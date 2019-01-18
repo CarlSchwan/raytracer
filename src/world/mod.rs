@@ -10,7 +10,6 @@ pub mod obj;
 pub mod plane;
 pub mod sphere;
 pub mod triangle;
-pub mod camera;
 
 pub trait Interceptable {
     fn intercept(&self, ray: &Ray) -> Option<(f64, Intersection)>;

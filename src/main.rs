@@ -16,13 +16,15 @@ use crate::shader::specular_shader::SpecularShader;
 use crate::shader::*;
 use crate::shader::mirror_shader::MirrorShader;
 use crate::shader::chess_shader::ChessShader;
-use crate::world::camera::Camera;
+use crate::camera::Camera;
+use crate::camera::equilinear_camera::*;
 
 mod helpers;
 mod intersection;
 mod ray;
 mod world;
 mod shader;
+mod camera;
 
 fn main() {
 
@@ -57,7 +59,7 @@ fn main() {
     let mut lights = Vec::new();
     lights.push(Light::new(0.0, -10.0, 6.0, Vector3::new(1.0, 0.5, 1.0)));
 
-	let cam = Camera {width: 300,
+	let cam = EquilinearCamera {width: 300,
 					  height: 150,
 					  roll:-0.2, // down-up
 					  pitch: 0.2, //right-left

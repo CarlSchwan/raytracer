@@ -1,11 +1,12 @@
 use na::{Vector3, Unit, Rotation3};
 use crate::world::World;
 use crate::ray::Ray;
+use crate::camera::*;
 use image::{DynamicImage, GenericImage};
 use std::f64;
 
 
-pub struct Camera {
+pub struct EquilinearCamera {
 	pub height: u32,
 	pub width: u32,
 	pub roll: f64,
@@ -15,8 +16,8 @@ pub struct Camera {
 	pub vertical_viewangle: f64,
 }
 
-impl Camera {
-	pub fn render(&self, world: World) -> DynamicImage {
+impl Camera for EquilinearCamera {
+	fn render(&self, world: World) -> DynamicImage {
         // algorithm for direction taken from https://www.scratchapixel.com/code.php?id=3&origin=/lessons/3d-basic-rendering/introduction-to-ray-tracing
         let mut img = DynamicImage::new_rgb8(self.width, self.height);
         let inv_width = 1.0 / self.width as f64;
