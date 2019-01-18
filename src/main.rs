@@ -16,6 +16,7 @@ use crate::shader::specular_shader::SpecularShader;
 use crate::shader::*;
 use crate::shader::mirror_shader::MirrorShader;
 use crate::shader::chess_shader::ChessShader;
+use crate::world::camera::Camera;
 
 mod helpers;
 mod intersection;
@@ -56,8 +57,14 @@ fn main() {
     let mut lights = Vec::new();
     lights.push(Light::new(0.0, -10.0, 6.0, Vector3::new(1.0, 0.5, 1.0)));
 
-    let w = world::World::new(300, 100, elements, lights);
-    //w.render().save(io::stdout(), image::ImageFormat::PNG);
-    let image = w.render();
+	let cam = Camera {width: 300,
+					  height: 150,
+					  roll:0.0, pitch: 0.0, yaw: 0.0,
+					  pos: Vector3::new(0.0,0.0,0.0),
+					  vertical_viewangle:40.0,
+					 };
+
+    let w = world::World::new(elements, lights);
+    let image = cam.render(w);
     image.save("./output.png").expect("Could not save image!");
 }
