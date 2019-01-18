@@ -3,8 +3,8 @@ use nalgebra::{Vector3, Vector2};
 use crate::world::World;
 
 pub struct ChessShader {
-    pub shader: Box<Shader>,
-    pub color: Vector3<f64>, //second color
+    pub shader1: Box<Shader>,
+    pub shader2: Box<Shader>,
     pub size: f64, //size of squares
 }
 
@@ -20,9 +20,9 @@ impl Shader for ChessShader {
         let modulo = (_surface_pos * self.size).map(|x| if my_mod(x,2.0) <= 1.0 {0} else {1});
         let chooser = modulo.dot(&modulo);
         return if chooser == 0 || chooser == 2 {
-            self.color
+            self.shader1.get_appearance_for(_intersection_pos, _ray_dir, _surface_normal, _world, _surface_pos, _recursion_depth)
         } else {
-            self.shader.get_appearance_for(_intersection_pos, _ray_dir, _surface_normal, _world, _surface_pos, _recursion_depth)
+            self.shader2.get_appearance_for(_intersection_pos, _ray_dir, _surface_normal, _world, _surface_pos, _recursion_depth)
         }
     }
 }
