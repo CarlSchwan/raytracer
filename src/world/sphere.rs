@@ -1,7 +1,7 @@
 use crate::intersection::Intersection;
 use crate::ray::Ray;
 use crate::world::Interceptable;
-use na::{Vector3, Vector2, angle};
+use na::{Vector3, Vector2, Rotation3};
 use crate::shader::Shader;
 use std::f64;
 use crate::helpers::vector2polar;
@@ -10,6 +10,9 @@ pub struct Sphere {
     pub center: Vector3<f64>,
     pub radius: f64,
     pub shader: Box<Shader>,
+	pub roll: f64,
+	pub pitch: f64,
+	pub yaw: f64,
 }
 
 impl Interceptable for Sphere {
@@ -34,7 +37,8 @@ impl Interceptable for Sphere {
                 Some(lambda) => {
                     let pos = ray.start + ray.dir.into_inner() * lambda;
                     let pos_to_center = pos - self.center;
-					let (vertical_angle, horizontal_angle) = vector2polar(&pos_to_center);
+					let vector_on_surface = Rotation3::from_euler_angles(self.roll, self.pitch, self.yaw) * pos_to_center;
+					let (vertical_angle, horizontal_angle) = vector2polar(&vector_on_surface);
                     return Some((lambda,
                                  Intersection {
                                     pos: pos,
