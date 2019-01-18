@@ -1,23 +1,23 @@
 use std::fs::File;
 use std::io::Read;
 use crate::world;
-use crate::shader::get_phong;
+use crate::shader::{Shader, get_phong, specular_shader::SpecularShader, diffuse_shader::DiffuseShader, ambient_shader::AmbientShader};
 use crate::world::triangle::Triangle;
 use wavefront_obj::obj::Primitive;
 use wavefront_obj::obj::parse as obj_parse;
-use wavefront_obj::mtl::parse as mtl_parse;
+use wavefront_obj::mtl::{parse as mtl_parse, Color, Illumination};
 use wavefront_obj::mtl::Material;
 use crate::error::Error;
 use na::Vector3;
-use image::Rgba;
-use image::Pixel;
+use image::{Rgba, Pixel};
+use std::collections::HashMap;
 
 /// FileParser struct
 /// Can parse obj and mtl wavefront files
 /// After parsing multiple files with this struct, get the elements field
 pub struct FileParser {
     pub elements: std::vec::Vec<std::boxed::Box<world::Interceptable>>,
-    materials: Vec<Material>,
+    materials: HashMap<String, Material>,
 }
 
 impl FileParser {
@@ -25,7 +25,7 @@ impl FileParser {
     pub fn new() -> Self {
         FileParser {
             elements: Vec::new(),
-            materials: Vec::new(),
+            materials: HashMap::new(),
         }
     }
 
@@ -49,6 +49,7 @@ impl FileParser {
         }
     }
 
+
     /// Parse a wavefront obj file (only supports a subset from the subset that the crate
     /// wavefront_obj support.
     fn parse_obj(&mut self, contents: String) -> Result<(), Error> {
@@ -69,12 +70,14 @@ impl FileParser {
                             let vertices_c = object.vertices[w.0];
                             let c = Vector3::new(vertices_c.x, vertices_c.y, vertices_c.z);
 
-                            self.elements.push(Box::new(Triangle {
-                                a,
-                                b,
-                                c,
-                                shader: get_phong(Vector3::new(0.0, 1.0, 0.0)
-                            )}));
+                            let shader = if let Some(name) = &geometry.material_name {
+                                let mat = self.materials.get(name).expect("Material don't exist");
+                                material_to_shader(mat)
+                            } else {
+                                get_phong(Vector3::new(0.0, 1.0, 0.0))
+                            };
+
+                            self.elements.push(Box::new(Triangle { a, b, c, shader}));
                         }
                         _ => (),
                     };
@@ -86,9 +89,27 @@ impl FileParser {
     }
 
     /// Parse a wavefront mnt file
-    pub fn parse_mtl(&mut self, contents: String) -> Result<(), Error> {
+    fn parse_mtl(&mut self, contents: String) -> Result<(), Error> {
         let mut material_set = mtl_parse(contents)?;
-        self.materials.append(&mut material_set.materials);
+        for material in material_set.materials {
+            let name = material.name.clone();
+            self.materials.insert(name, material);
+        }
         Ok(())
+    }
+}
+
+fn color_to_vec(color: Color) -> Vector3<f64> {
+    Vector3::new(color.r, color.g, color.b)
+}
+
+fn material_to_shader(material: &Material) -> Box<Shader> {
+    let diffuse_shader : Box<Shader> = Box::new(DiffuseShader { color: color_to_vec(material.color_diffuse) });
+    let specular_shader = SpecularShader { alpha: 10.0 }; // TODO FIXME use material.color_diffuse
+    let ambient_shader : Box<Shader> = Box::new(AmbientShader { light: color_to_vec(material.color_ambient) });
+    match material.illumination {
+        Illumination::Ambient => ambient_shader,
+        Illumination::AmbientDiffuse => 0.5 * diffuse_shader +  0.5 * ambient_shader,
+        Illumination::AmbientDiffuseSpecular  => 0.5 * diffuse_shader + specular_shader + 0.5 * ambient_shader,
     }
 }
