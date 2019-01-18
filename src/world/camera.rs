@@ -1,4 +1,4 @@
-use na::{Vector3, Unit};
+use na::{Vector3, Unit, Rotation3};
 use crate::world::World;
 use crate::ray::Ray;
 use image::{DynamicImage, GenericImage};
@@ -23,11 +23,12 @@ impl Camera {
         let inv_height = 1.0 / self.height as f64;
         let aspectratio = self.width as f64 / self.height as f64;
         let vertical_half_canvas_size = (f64::consts::FRAC_PI_2 * self.vertical_viewangle / 180.0).tan();
+		let rot_matrix = Rotation3::from_euler_angles(self.roll, self.pitch, self.yaw);
         for x in 0..self.width {
             for y in 0..self.height {
                 let xx = (2.0 * ((x as f64 + 0.5) * inv_width) - 1.0) * vertical_half_canvas_size * aspectratio;
                 let yy = (2.0 * ((y as f64 + 0.5) * inv_height) -1.) * vertical_half_canvas_size;
-                let dir = Vector3::new(xx, yy, -1.0).normalize(); //TODO
+                let dir = rot_matrix * Vector3::new(xx, yy, 1.0).normalize();
                 let ray = Ray {
                     dir: Unit::new_normalize(dir),
                     start: self.pos,
