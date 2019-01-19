@@ -4,6 +4,7 @@ use crate::ray::Ray;
 use crate::camera::*;
 use image::{DynamicImage, GenericImage};
 use std::f64;
+use crate::helpers::*;
 
 
 pub struct EquilinearCamera {
@@ -14,6 +15,15 @@ pub struct EquilinearCamera {
 	pub yaw: f64,
 	pub pos: Vector3<f64>,
 	pub vertical_viewangle: f64,
+}
+
+impl EquilinearCamera {
+	pub fn point_at(&mut self, object: Vector3<f64>) -> () {
+		self.yaw = 0.0;
+		let (gamma, phi) = vector2polar(&(object - self.pos));
+		self.roll = gamma;
+		self.pitch = phi;
+	}
 }
 
 impl Camera for EquilinearCamera {
