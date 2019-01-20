@@ -22,6 +22,6 @@ pub fn vector2polar<T:na::Real>(v : &Vector3<T>) -> (T, T) {
 	let vertical_angle = angle(&Vector3::y_axis().into_inner(), v);
 	let projected_to_flat = Vector3::new(v.x, T::pi() - T::pi(), v.z);
 	let horizontal_angle = angle(&Vector3::x_axis().into_inner(), &projected_to_flat);
-	(vertical_angle, horizontal_angle)
+	(vertical_angle, if v.z > T::pi() - T::pi() {horizontal_angle} else {-horizontal_angle})
 }
 
