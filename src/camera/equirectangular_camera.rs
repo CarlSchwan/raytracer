@@ -16,7 +16,7 @@ pub struct EquirectangularCamera {
 }
 
 impl Camera for EquirectangularCamera {
-	fn render(&self, world: World) -> DynamicImage {
+	fn render(&self, world: &World) -> DynamicImage {
 		let width = self.height * 2;
         let mut img = DynamicImage::new_rgb8(width, self.height);
 

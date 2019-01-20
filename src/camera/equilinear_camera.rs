@@ -27,7 +27,7 @@ impl EquilinearCamera {
 }
 
 impl Camera for EquilinearCamera {
-	fn render(&self, world: World) -> DynamicImage {
+	fn render(&self, world: &World) -> DynamicImage {
         // algorithm for direction taken from https://www.scratchapixel.com/code.php?id=3&origin=/lessons/3d-basic-rendering/introduction-to-ray-tracing
         let mut img = DynamicImage::new_rgb8(self.width, self.height);
         let inv_width = 1.0 / self.width as f64;
