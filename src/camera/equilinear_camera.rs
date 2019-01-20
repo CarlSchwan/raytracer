@@ -20,9 +20,9 @@ pub struct EquilinearCamera {
 impl EquilinearCamera {
 	pub fn point_at(&mut self, object: Vector3<f64>) -> () {
 		self.yaw = 0.0;
-		let (gamma, phi) = vector2polar(&(object - self.pos));
-		self.roll = gamma;
-		self.pitch = phi;
+		let (vert_angle, hort_angle) = vector2polar(&(object - self.pos));
+		self.roll = vert_angle - f64::consts::FRAC_PI_2;
+		self.pitch = - hort_angle + f64::consts::FRAC_PI_2;
 	}
 }
 
