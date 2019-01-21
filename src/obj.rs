@@ -71,12 +71,8 @@ impl FileParser {
                             let vertices_c = object.vertices[w.0];
                             let c = Vector3::new(vertices_c.x, vertices_c.y, vertices_c.z);
 
-                            let shader = if let Some(name) = &geometry.material_name {
-                                let mat = self.materials.get(name).expect("Material don't exist");
-                                material_to_shader(mat)
-                            } else {
-                                Ok(get_phong(Vector3::new(0.0, 1.0, 0.0)))
-                            }?;
+                            let shader =
+                                get_phong(Vector3::new(0.0, 1.0, 0.0));
 
                             self.elements.add_bounded(Box::new(Triangle { a, b, c, shader}));
                         }
