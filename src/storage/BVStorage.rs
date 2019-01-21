@@ -18,10 +18,13 @@ impl BVStorage {
 	pub fn new(elements: Vec<Box<Bounded>>) -> Self {
 		let box_min = pointwise_min_list(elements.iter().map(|v| v.get_min()).collect());
 		let box_max = pointwise_max_list(elements.iter().map(|v| v.get_max()).collect());
+
 		let mins_max = pointwise_max_list(elements.iter().map(|v| v.get_min()).collect());
 
+
 		let split_dimension = max_abs_dimension(mins_max - box_min);
-		let split_point = (get_vector_dim(mins_max, split_dimension) - get_vector_dim(box_min, split_dimension)) / 2.0;
+		let split_point = (get_vector_dim(mins_max, split_dimension) + get_vector_dim(box_min, split_dimension)) / 2.0;
+
 		
 		let mut lower_elements = Vec::new();
 		let mut upper_elements = Vec::new();
