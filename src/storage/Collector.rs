@@ -26,6 +26,15 @@ impl<'a> Collector {
 	pub fn into_storage(mut self) -> Box<Interceptable> {
 		let bounded_elements = Box::new(BVStorage::new(self.bounded_elements));
 		self.elements.push(bounded_elements);
+		//self.elements.append(&mut bounded2interceptable(self.bounded_elements));
 		Box::new(PrimitiveStorage{ elements: self.elements})
 	}
+}
+
+fn bounded2interceptable(bounded: Vec<Box<Bounded>>) -> Vec<Box<Interceptable>> {
+	let mut result = Vec::new();
+	for e in bounded {
+		result.push(Box::from(e));
+	}
+	result
 }
