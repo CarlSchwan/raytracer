@@ -1,3 +1,4 @@
+use crate::storage::Collector::Collector;
 use std::fs::File;
 use std::io::Read;
 use crate::world;
@@ -16,7 +17,7 @@ use std::collections::HashMap;
 /// Can parse obj and mtl wavefront files
 /// After parsing multiple files with this struct, get the elements field
 pub struct FileParser {
-    pub elements: std::vec::Vec<std::boxed::Box<world::Interceptable>>,
+    pub elements: Collector,
     materials: HashMap<String, Material>,
 }
 
@@ -24,7 +25,7 @@ impl FileParser {
     /// Create a FileParser to parse wavefront files (obj and mtl)
     pub fn new() -> Self {
         FileParser {
-            elements: Vec::new(),
+            elements: Collector::new(),
             materials: HashMap::new(),
         }
     }
@@ -77,7 +78,7 @@ impl FileParser {
                                 Ok(get_phong(Vector3::new(0.0, 1.0, 0.0)))
                             }?;
 
-                            self.elements.push(Box::new(Triangle { a, b, c, shader}));
+                            self.elements.add(Box::new(Triangle { a, b, c, shader}));
                         }
                         _ => (),
                     };

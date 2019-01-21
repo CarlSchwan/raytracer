@@ -9,6 +9,7 @@ mod world;
 mod shader;
 mod obj;
 mod error;
+mod storage;
 
 use crate::world::sphere::*;
 use crate::world::plane::*;
@@ -43,24 +44,24 @@ fn main() -> Result<(), Error> {
     let red_shader = get_phong(Vector3::new(1.0, 0.0, 0.0));
     let blue_shader = get_phong(Vector3::new(0.0, 0.0, 1.0));
 
-    elements.push(Box::new(Sphere {
+    elements.add(Box::new(Sphere {
         center: Vector3::new(0.0, 1.0, 6.0),
         radius: 1.0,
         shader: red_shader,
     }));
-    elements.push(Box::new(Sphere {
+    elements.add(Box::new(Sphere {
         center: Vector3::new(1.0, -1.0, 5.0),
         radius: 1.0,
         shader: green_shader,
     }));
-    elements.push(Box::new(Sphere {
+    elements.add(Box::new(Sphere {
         center: Vector3::new(2.0, 0.0, 9.0),
         radius: 1.0,
         shader: Box::new(MirrorShader{
             initial_step: 0.001,
         }),
     }));
-    elements.push(Box::new(Plane {
+    elements.add(Box::new(Plane {
         normal: Unit::new_normalize(Vector3::new(0.0, 1.0, 0.0)),
         d: 1.0,
         shader: blue_shader,
@@ -79,7 +80,7 @@ fn main() -> Result<(), Error> {
 					  vertical_viewangle:40.0,
 					 };
 
-    let w = world::World::new(elements, lights);
+    let w = world::World::new(elements.into_storage(), lights);
     let image = cam.render(w);
     image.save("./output.png")?;
     Ok(())

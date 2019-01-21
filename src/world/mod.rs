@@ -16,13 +16,13 @@ pub trait Interceptable {
 }
 
 pub struct World {
-    pub elements: Vec<Box<Interceptable>>,
+    pub elements: Box<Interceptable>,
     pub lights: Vec<Light>,
 }
 
 impl World {
     pub fn new(
-        elements: Vec<Box<Interceptable>>,
+        elements: Box<Interceptable>,
         lights: Vec<Light>,
     ) -> Self {
         World {
@@ -51,16 +51,10 @@ impl World {
     }
 
     pub fn next_intersection(&self, ray: &Ray) -> Option<Intersection> {
-        let mut max_distance = f64::INFINITY;
-        let mut interception = None;
-        for element in &self.elements {
-            if let Some((distance, intercept)) = element.intercept(ray) {
-                if distance < max_distance {
-                    max_distance = distance;
-                    interception = Some(intercept);
-                }
-            }
-        }
-        interception
+        return if let Some((_dist, int)) =self.elements.intercept(ray) {
+					Some(int)}
+			   else {
+					None
+			   }
     }
 }
