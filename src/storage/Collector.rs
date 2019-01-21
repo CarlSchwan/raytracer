@@ -1,6 +1,7 @@
 use crate::storage::PrimitiveStorage::PrimitiveStorage;
 use crate::world::Interceptable;
 use crate::storage::Bounded;
+use crate::storage::BVStorage::*;
 
 pub struct Collector {
 	bounded_elements: Vec<Box<Bounded>>,
@@ -22,8 +23,9 @@ impl<'a> Collector {
 		self.bounded_elements.push(element);
 	}
 	
-	pub fn into_storage(self) -> Box<Interceptable> {
-		//self.elements.append(&mut self.bounded_elements); //TODO
-		return Box::new(PrimitiveStorage{ elements: self.elements})
+	pub fn into_storage(mut self) -> Box<Interceptable> {
+		let bounded_elements = Box::new(BVStorage::new(self.bounded_elements));
+		self.elements.push(bounded_elements);
+		Box::new(PrimitiveStorage{ elements: self.elements})
 	}
 }
