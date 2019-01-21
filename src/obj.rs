@@ -78,7 +78,7 @@ impl FileParser {
                                 Ok(get_phong(Vector3::new(0.0, 1.0, 0.0)))
                             }?;
 
-                            self.elements.add(Box::new(Triangle { a, b, c, shader}));
+                            self.elements.add_bounded(Box::new(Triangle { a, b, c, shader}));
                         }
                         _ => (),
                     };
