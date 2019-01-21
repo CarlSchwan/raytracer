@@ -14,7 +14,7 @@ impl Shader for MirrorShader {
         }
         let unit_normal = surface_normal.normalize();
         let othogonal_part = unit_normal.dot(&-ray_dir) * unit_normal;
-        let mirror_ray_dir = (2.0 * othogonal_part - ray_dir).normalize();
+        let mirror_ray_dir = (2.0 * othogonal_part + ray_dir).normalize();
         let mirror_ray = Ray { start: intersection_pos + mirror_ray_dir * self.initial_step, dir: Unit::new_normalize(mirror_ray_dir)};
         world.appearance(mirror_ray, recursion_depth - 1)
     }

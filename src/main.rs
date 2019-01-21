@@ -10,6 +10,7 @@ mod shader;
 mod obj;
 mod error;
 mod storage;
+mod camera;
 
 use crate::world::sphere::*;
 use crate::world::plane::*;
@@ -21,7 +22,8 @@ use crate::shader::specular_shader::SpecularShader;
 use crate::shader::*;
 use crate::shader::mirror_shader::MirrorShader;
 use crate::shader::chess_shader::ChessShader;
-use crate::world::camera::Camera;
+use crate::camera::Camera;
+use crate::camera::equilinear_camera::*;
 
 use wavefront_obj::obj::*;
 use std::env;
@@ -44,17 +46,17 @@ fn main() -> Result<(), Error> {
     let red_shader = get_phong(Vector3::new(1.0, 0.0, 0.0));
     let blue_shader = get_phong(Vector3::new(0.0, 0.0, 1.0));
 
-    elements.add(Box::new(Sphere {
+    elements.add_bounded(Box::new(Sphere {
         center: Vector3::new(0.0, 1.0, 6.0),
         radius: 1.0,
         shader: red_shader,
     }));
-    elements.add(Box::new(Sphere {
+    elements.add_bounded(Box::new(Sphere {
         center: Vector3::new(1.0, -1.0, 5.0),
         radius: 1.0,
         shader: green_shader,
     }));
-    elements.add(Box::new(Sphere {
+    elements.add_bounded(Box::new(Sphere {
         center: Vector3::new(2.0, 0.0, 9.0),
         radius: 1.0,
         shader: Box::new(MirrorShader{
@@ -71,7 +73,7 @@ fn main() -> Result<(), Error> {
     let mut lights = Vec::new();
     lights.push(Light::new(0.0, -10.0, 6.0, Vector3::new(1.0, 0.5, 1.0)));
 
-	let cam = Camera {width: 300,
+	let cam = EquilinearCamera {width: 300,
 					  height: 150,
 					  roll:-0.2, // down-up
 					  pitch: 0.2, //right-left
