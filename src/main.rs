@@ -1,6 +1,7 @@
 extern crate nalgebra as na;
 extern crate image;
 extern crate wavefront_obj;
+extern crate rayon;
 
 mod helpers;
 mod intersection;
@@ -81,7 +82,7 @@ fn main() -> Result<(), Error> {
 					 };
 
     let w = world::World::new(elements.into_storage(), lights);
-    let image = cam.render(w);
+    let image = cam.render(&w);
     image.save("./output.png")?;
     Ok(())
 }
