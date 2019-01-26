@@ -20,14 +20,8 @@ pub struct World {
 }
 
 impl World {
-    pub fn new(
-        elements: Box<Interceptable>,
-        lights: Vec<Light>,
-    ) -> Self {
-        World {
-            elements,
-            lights,
-        }
+    pub fn new(elements: Box<Interceptable>, lights: Vec<Light>) -> Self {
+        World { elements, lights }
     }
 
     pub fn color(&self, ray: Ray, recursion_depth: u64) -> Rgba<u8> {
@@ -45,15 +39,15 @@ impl World {
             // touch something
             intersection.get_appearance(ray.dir.into_inner(), self, recursion_depth)
         } else {
-            Vector3::new(0.0,0.0,0.0)
+            Vector3::new(0.0, 0.0, 0.0)
         }
     }
 
     pub fn next_intersection(&self, ray: &Ray) -> Option<Intersection> {
-        return if let Some((_dist, int)) =self.elements.intercept(ray) {
-					Some(int)}
-			   else {
-					None
-			   }
+        return if let Some((_dist, int)) = self.elements.intercept(ray) {
+            Some(int)
+        } else {
+            None
+        };
     }
 }

@@ -1,6 +1,6 @@
 use std::fmt;
-use std::fmt::Formatter;
 use std::fmt::Display;
+use std::fmt::Formatter;
 use std::io;
 
 #[derive(Debug)]
