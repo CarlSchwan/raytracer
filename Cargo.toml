@@ -1,10 +1,10 @@
 [package]
 name = "raytracing"
 version = "0.1.0"
-authors = ["Carl Schwan <schwancarl@protonmail.com>"]
+authors = ["Carl", "Sami", "Daniel"]
 edition = "2018"
 
 [dependencies]
 nalgebra = "0.16.12"
-wavefront_obj = "5.1.0"
+wavefront_obj = { git = "https://gitlab.com/ognarb/wavefront_obj.git" } 
 image = "0.20.1"

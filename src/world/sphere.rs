@@ -3,6 +3,7 @@ use crate::ray::Ray;
 use crate::world::Interceptable;
 use na::{Vector3, Vector2};
 use crate::shader::Shader;
+use crate::storage::Bounded;
 use std::f64;
 
 pub struct Sphere {
@@ -60,3 +61,12 @@ fn min(v: Vec<&f64>) -> Option<f64> {
     return ret;
 }
 
+
+impl Bounded for Sphere {
+	fn get_min(&self) -> Vector3<f64> {
+		Vector3::new(self.center.x - self.radius, self.center.y - self.radius, self.center.z - self.radius)
+	}
+	fn get_max(&self) -> Vector3<f64> {
+		Vector3::new(self.center.x + self.radius, self.center.y + self.radius, self.center.z + self.radius)
+	}
+}
