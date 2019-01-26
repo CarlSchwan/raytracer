@@ -78,7 +78,7 @@ impl Interceptable for BVStorage {
         } else {
             ray.dir.z
         };
-        let (txm, txM) = if ray.dir.x > 0.0 {
+        let (txm, tx_m) = if ray.dir.x > 0.0 {
             (
                 (self.min.x - ray.start.x) / xspeed,
                 (self.max.x - ray.start.x) / xspeed,
@@ -90,7 +90,7 @@ impl Interceptable for BVStorage {
             )
         };
 
-        let (tym, tyM) = if ray.dir.y > 0.0 {
+        let (tym, ty_m) = if ray.dir.y > 0.0 {
             (
                 (self.min.y - ray.start.y) / yspeed,
                 (self.max.y - ray.start.y) / yspeed,
@@ -102,7 +102,7 @@ impl Interceptable for BVStorage {
             )
         };
 
-        let (tzm, tzM) = if ray.dir.z > 0.0 {
+        let (tzm, tz_m) = if ray.dir.z > 0.0 {
             (
                 (self.min.z - ray.start.z) / zspeed,
                 (self.max.z - ray.start.z) / zspeed,
@@ -114,7 +114,7 @@ impl Interceptable for BVStorage {
             )
         };
 
-        if txm.max(tym).max(tzm) > txM.min(tyM).min(tzM) {
+        if txm.max(tym).max(tzm) > tx_m.min(ty_m).min(tz_m) {
             return None;
         }
         return match (self.left.intercept(ray), self.right.intercept(ray)) {
