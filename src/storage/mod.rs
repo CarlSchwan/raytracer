@@ -1,29 +1,29 @@
-use na::Vector3;
-use crate::world::Interceptable;
 use crate::intersection::Intersection;
 use crate::ray::Ray;
+use crate::world::Interceptable;
+use na::Vector3;
 
-pub mod Collector;
-mod BVStorage;
-pub mod PrimitiveStorage;
+mod bv_storage;
+pub mod collector;
+pub mod primitive_storage;
 
-pub trait Bounded : Interceptable {
-	fn get_min(&self) -> Vector3<f64>;
-	fn get_max(&self) -> Vector3<f64>;
+pub trait Bounded: Interceptable {
+    fn get_min(&self) -> Vector3<f64>;
+    fn get_max(&self) -> Vector3<f64>;
 }
 
 impl From<Box<Bounded>> for Box<Interceptable> {
-	fn from(element: Box<Bounded>) -> Self {
-		Box::new(InterceptFromBound{child: element})
-	}
+    fn from(element: Box<Bounded>) -> Self {
+        Box::new(InterceptFromBound { child: element })
+    }
 }
 
 struct InterceptFromBound {
-	child: Box<Bounded>,
+    child: Box<Bounded>,
 }
 
 impl Interceptable for InterceptFromBound {
     fn intercept(&self, ray: &Ray) -> Option<(f64, Intersection)> {
-		self.child.intercept(ray)
-	}
+        self.child.intercept(ray)
+    }
 }
