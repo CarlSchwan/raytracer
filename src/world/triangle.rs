@@ -2,6 +2,7 @@ use crate::intersection::Intersection;
 use crate::ray::Ray;
 use crate::world::Interceptable;
 use crate::shader::Shader;
+use crate::storage::Bounded;
 use na::{Vector3, Vector2};
 
 pub struct Triangle {
@@ -56,4 +57,17 @@ impl Interceptable for Triangle {
             None
         };
     }
+}
+
+impl Bounded for Triangle {
+	fn get_min(&self) -> Vector3<f64> {
+		Vector3::new(self.a.x.min(self.b.x).min(self.c.x),
+			self.a.y.min(self.b.y).min(self.c.y),
+			self.a.z.min(self.b.z).min(self.c.z))
+	}
+	fn get_max(&self) -> Vector3<f64> {
+		Vector3::new(self.a.x.max(self.b.x).max(self.c.x),
+			self.a.y.max(self.b.y).max(self.c.y),
+			self.a.z.max(self.b.z).max(self.c.z))
+	}
 }
