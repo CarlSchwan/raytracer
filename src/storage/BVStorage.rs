@@ -22,14 +22,14 @@ impl BVStorage {
         let mins_max = pointwise_max_list(elements.iter().map(|v| v.get_min()).collect());
 
 
-        let split_dimension = max_abs_dimension(mins_max - box_min);
-        let split_point = (get_vector_dim(mins_max, split_dimension) + get_vector_dim(box_min, split_dimension)) / 2.0;
+        let split_dimension = (mins_max - box_min).iamax();
+        let split_point = (mins_max[split_dimension] + box_min[split_dimension]) / 2.0;
 
         
         let mut lower_elements = Vec::new();
         let mut upper_elements = Vec::new();
         for element in elements {
-            if get_vector_dim(element.get_min(), split_dimension) < split_point {
+            if element.get_min()[split_dimension] < split_point {
                 lower_elements.push(element);
             } else {
                 upper_elements.push(element);
@@ -74,7 +74,7 @@ impl Interceptable for BVStorage {
         tm = (tm - ray.start).component_div(&speed);
         tM = (tM - ray.start).component_div(&speed);
 
-        if (tm.amax() > tM.amin()) {
+        if (tm.x.max(tm.y).max(tm.z) > tM.x.max(tM.y).max(tM.z)) {
             return None;
         }
 
@@ -88,30 +88,6 @@ impl Interceptable for BVStorage {
                 }
         }
     }
-}
-
-fn get_vector_dim(v: Vector3<f64>, dim: u8) -> f64 {
-    if dim==0 {
-        return v.x
-    }
-    if dim==1 {
-        return v.y
-    }
-    v.z
-}
-
-fn max_abs_dimension(v: Vector3<f64>) -> u8 {
-    let mut max = v.x.abs();
-    let mut dim = 0;
-    
-    if v.y.abs() > max {
-        max = v.y.abs();
-        dim = 1;
-    }
-    if v.z.abs() > max {
-        dim = 2;
-    }
-    dim
 }
 
 fn pointwise_min_list(vectors: Vec<Vector3<f64>>) -> Vector3<f64> {
