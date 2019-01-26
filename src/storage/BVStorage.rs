@@ -67,52 +67,33 @@ impl BVStorage {
 
 impl Interceptable for BVStorage {
 	fn intercept(&self, ray: &Ray) -> Option<(f64, Intersection)> {
-		let xspeed = if ray.dir.x == 0.0 {
-			f64::MIN_POSITIVE } else {ray.dir.x};
-		let yspeed = if ray.dir.y == 0.0 {
-			f64::MIN_POSITIVE } else {ray.dir.y};
-		let zspeed = if ray.dir.z == 0.0 {
-			f64::MIN_POSITIVE } else {ray.dir.z};
-		let txm = if ray.dir.x > 0.0 {
-				(self.min.x - ray.start.x) / xspeed
+		let xspeed = if ray.dir.x == 0.0 { f64::MIN_POSITIVE } else {ray.dir.x};
+		let yspeed = if ray.dir.y == 0.0 { f64::MIN_POSITIVE } else {ray.dir.y};
+		let zspeed = if ray.dir.z == 0.0 { f64::MIN_POSITIVE } else {ray.dir.z};
+		let (txm, txM) = if ray.dir.x > 0.0 {
+				((self.min.x - ray.start.x) / xspeed, (self.max.x - ray.start.x) / xspeed)
 			} else {
-				(self.max.x - ray.start.x) / xspeed
-			};
-		let txM = if ray.dir.x > 0.0 {
-				(self.max.x - ray.start.x) / xspeed
-			} else {
-				(self.min.x - ray.start.x) / xspeed
+				((self.max.x - ray.start.x) / xspeed, (self.min.x - ray.start.x) / xspeed)
 			};
 			
-		let tym = if ray.dir.y > 0.0 {
-				(self.min.y - ray.start.y) / yspeed
+		let (tym, tyM) = if ray.dir.y > 0.0 {
+				((self.min.y - ray.start.y) / yspeed, (self.max.y - ray.start.y) / yspeed)
 			} else {
-				(self.max.y - ray.start.y) / yspeed
-			};
-		let tyM = if ray.dir.y > 0.0 {
-				(self.max.y - ray.start.y) / yspeed
-			} else {
-				(self.min.y - ray.start.y) / yspeed
+				((self.max.y - ray.start.y) / yspeed, (self.min.y - ray.start.y) / yspeed)
 			};
 			
-		let tzm = if ray.dir.z > 0.0 {
-				(self.min.z - ray.start.z) / zspeed
+		let (tzm, tzM) = if ray.dir.z > 0.0 {
+				((self.min.z - ray.start.z) / zspeed, (self.max.z - ray.start.z) / zspeed)
 			} else {
-				(self.max.z - ray.start.z) / zspeed
-			};
-		let tzM = if ray.dir.z > 0.0 {
-				(self.max.z - ray.start.z) / zspeed
-			} else {
-				(self.min.z - ray.start.z) / zspeed
+				((self.max.z - ray.start.z) / zspeed, (self.min.z - ray.start.z) / zspeed)
 			};
 			
 		if txm.max(tym).max(tzm) > txM.min(tyM).min(tzM) {
 			return None
 		}
 		return match (self.left.intercept(ray), self.right.intercept(ray)) {
-			(None, None) => None,
-			(Some((dist, int)), None) => Some((dist,int)),
-			(None, Some((dist, int))) => Some((dist, int)),
+			(None, x) => x,
+			(x, None) => x,
 			(Some((dist1, int1)), Some((dist2, int2))) => if dist1 < dist2 {
 					Some((dist1, int1))
 				} else {
