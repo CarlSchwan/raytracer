@@ -1,8 +1,7 @@
 use crate::intersection::Intersection;
 use crate::ray::Ray;
 use crate::storage::Bounded;
-use crate::storage::PrimitiveStorage::PrimitiveStorage;
-use crate::storage::*;
+use crate::storage::primitive_storage::PrimitiveStorage;
 use crate::world::Interceptable;
 use nalgebra::Vector3;
 use std::f64;

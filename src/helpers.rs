@@ -1,5 +1,5 @@
 use image::{Pixel, Rgb, Rgba};
-use na::{angle, Vector3};
+use na::{Matrix, Vector3};
 
 // It's easier to do everything with Vectors, and then convert them to colors
 //pub fn color2vector(c : &Rgba<f64>) -> Vector3<f64> {
@@ -19,9 +19,9 @@ pub fn polar2vector(gamma: f64, phi: f64) -> Vector3<f64> {
 }
 
 pub fn vector2polar<T: na::Real>(v: &Vector3<T>) -> (T, T) {
-    let vertical_angle = angle(&Vector3::y_axis().into_inner(), v);
+    let vertical_angle = Matrix::angle(&Vector3::y_axis().into_inner(), v);
     let projected_to_flat = Vector3::new(v.x, T::pi() - T::pi(), v.z);
-    let horizontal_angle = angle(&Vector3::x_axis().into_inner(), &projected_to_flat);
+    let horizontal_angle = Matrix::angle(&Vector3::x_axis().into_inner(), &projected_to_flat);
     (
         vertical_angle,
         if v.z > T::pi() - T::pi() {

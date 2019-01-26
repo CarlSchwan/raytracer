@@ -3,10 +3,8 @@ use crate::shader::{
     ambient_shader::AmbientShader, diffuse_shader::DiffuseShader, get_phong,
     mirror_shader::MirrorShader, specular_shader::SpecularShader, Shader,
 };
-use crate::storage::Collector::Collector;
-use crate::world;
+use crate::storage::collector::Collector;
 use crate::world::triangle::Triangle;
-use image::{Pixel, Rgba};
 use na::Vector3;
 use std::collections::HashMap;
 use std::fs::File;
@@ -96,7 +94,7 @@ impl FileParser {
 
     /// Parse a wavefront mnt file
     fn parse_mtl(&mut self, contents: String) -> Result<(), Error> {
-        let mut material_set = mtl_parse(contents)?;
+        let material_set = mtl_parse(contents)?;
         for material in material_set.materials {
             let name = material.name.clone();
             self.materials.insert(name, material);

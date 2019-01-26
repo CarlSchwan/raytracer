@@ -16,18 +16,13 @@ use crate::camera::equilinear_camera::*;
 use crate::camera::Camera;
 use crate::error::Error;
 use crate::obj::FileParser;
-use crate::shader::chess_shader::ChessShader;
-use crate::shader::diffuse_shader::DiffuseShader;
 use crate::shader::mirror_shader::MirrorShader;
-use crate::shader::monochrome_shader::*;
-use crate::shader::specular_shader::SpecularShader;
 use crate::shader::*;
 use crate::world::light::Light;
 use crate::world::plane::*;
 use crate::world::sphere::*;
 use na::{Unit, Vector3};
 use std::env;
-use wavefront_obj::obj::*;
 
 fn main() -> Result<(), Error> {
     // Parse file given as args
@@ -39,7 +34,6 @@ fn main() -> Result<(), Error> {
     let mut elements = file_parser.elements;
 
     // add some spheres
-    let green_shader = get_phong(Vector3::new(0.0, 1.0, 0.0));
     let green_shader = get_phong(Vector3::new(0.0, 1.0, 0.0));
     let red_shader = get_phong(Vector3::new(1.0, 0.0, 0.0));
     let blue_shader = get_phong(Vector3::new(0.0, 0.0, 1.0));

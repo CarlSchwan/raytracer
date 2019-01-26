@@ -3,9 +3,9 @@ use crate::ray::Ray;
 use crate::world::Interceptable;
 use na::Vector3;
 
-mod BVStorage;
-pub mod Collector;
-pub mod PrimitiveStorage;
+mod bv_storage;
+pub mod collector;
+pub mod primitive_storage;
 
 pub trait Bounded: Interceptable {
     fn get_min(&self) -> Vector3<f64>;
