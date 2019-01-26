@@ -69,6 +69,6 @@ fn main() {
 					 };
 
     let w = world::World::new(elements, lights);
-    let image = cam.render(w);
+    let image = cam.render(&w);
     image.save("./output.png").expect("Could not save image!");
 }
