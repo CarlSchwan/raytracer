@@ -1,34 +1,30 @@
-extern crate nalgebra as na;
 extern crate image;
+extern crate nalgebra as na;
 extern crate wavefront_obj;
 
+mod camera;
+mod error;
 mod helpers;
 mod intersection;
-mod ray;
-mod world;
-mod shader;
 mod obj;
-mod error;
+mod ray;
+mod shader;
 mod storage;
-mod camera;
+mod world;
 
-use crate::world::sphere::*;
-use crate::world::plane::*;
-use crate::world::light::Light;
-use na::{Vector3, Unit};
-use crate::shader::monochrome_shader::*;
-use crate::shader::diffuse_shader::DiffuseShader;
-use crate::shader::specular_shader::SpecularShader;
-use crate::shader::*;
-use crate::shader::mirror_shader::MirrorShader;
-use crate::shader::chess_shader::ChessShader;
-use crate::camera::Camera;
 use crate::camera::equilinear_camera::*;
 use wavefront_obj::obj::*;
-use std::env;
 use crate::obj::FileParser;
 use std::rc::Rc;
 use crate::error::Error;
+use crate::shader::mirror_shader::MirrorShader;
+use crate::shader::*;
+use crate::world::light::Light;
+use crate::world::plane::*;
+use crate::world::sphere::*;
+use na::{Unit, Vector3};
+use std::env;
+use crate::camera::Camera;
 
 fn main() -> Result<(), Error> {
     // Parse file given as args
@@ -40,7 +36,6 @@ fn main() -> Result<(), Error> {
     let mut elements = file_parser.elements;
 
     // add some spheres
-    let green_shader = get_phong(Vector3::new(0.0, 1.0, 0.0));
     let green_shader = get_phong(Vector3::new(0.0, 1.0, 0.0));
     let red_shader = get_phong(Vector3::new(1.0, 0.0, 0.0));
     let blue_shader = get_phong(Vector3::new(0.0, 0.0, 1.0));
@@ -78,7 +73,7 @@ fn main() -> Result<(), Error> {
     elements.add(Box::new(Sphere {
         center: Vector3::new(2.0, 0.0, 9.0),
         radius: 1.0,
-        shader: Box::new(MirrorShader{
+        shader: Box::new(MirrorShader {
             initial_step: 0.001,
         }),
         pitch: 0.0,

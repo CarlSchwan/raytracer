@@ -1,17 +1,18 @@
-use crate::storage::Collector::Collector;
+use crate::error::Error;
+use crate::shader::{
+    ambient_shader::AmbientShader, diffuse_shader::DiffuseShader, get_phong,
+    mirror_shader::MirrorShader, specular_shader::SpecularShader, Shader,
+};
+use crate::storage::collector::Collector;
+use crate::world::triangle::Triangle;
+use na::Vector3;
+use std::collections::HashMap;
 use std::fs::File;
 use std::io::Read;
-use crate::world;
-use crate::shader::{Shader, get_phong, specular_shader::SpecularShader, diffuse_shader::DiffuseShader, ambient_shader::AmbientShader, mirror_shader::MirrorShader};
-use crate::world::triangle::Triangle;
-use wavefront_obj::obj::Primitive;
-use wavefront_obj::obj::parse as obj_parse;
-use wavefront_obj::mtl::{parse as mtl_parse, Color, Illumination};
 use wavefront_obj::mtl::Material;
-use crate::error::Error;
-use na::Vector3;
-use image::{Rgba, Pixel};
-use std::collections::HashMap;
+use wavefront_obj::mtl::{parse as mtl_parse, Color, Illumination};
+use wavefront_obj::obj::parse as obj_parse;
+use wavefront_obj::obj::Primitive;
 
 /// FileParser struct
 /// Can parse obj and mtl wavefront files
@@ -46,10 +47,11 @@ impl FileParser {
             self.parse_mtl(contents)?;
             Ok(())
         } else {
-            Err(Error::from("File is not a wavefront obj file or a mnt file"))
+            Err(Error::from(
+                "File is not a wavefront obj file or a mnt file",
+            ))
         }
     }
-
 
     /// Parse a wavefront obj file (only supports a subset from the subset that the crate
     /// wavefront_obj support.
@@ -78,7 +80,8 @@ impl FileParser {
                                 Ok(get_phong(Vector3::new(0.0, 1.0, 0.0)))
                             }?;
 
-                            self.elements.add_bounded(Box::new(Triangle { a, b, c, shader}));
+                            self.elements
+                                .add_bounded(Box::new(Triangle { a, b, c, shader }));
                         }
                         _ => (),
                     };
@@ -91,7 +94,7 @@ impl FileParser {
 
     /// Parse a wavefront mnt file
     fn parse_mtl(&mut self, contents: String) -> Result<(), Error> {
-        let mut material_set = mtl_parse(contents)?;
+        let material_set = mtl_parse(contents)?;
         for material in material_set.materials {
             let name = material.name.clone();
             self.materials.insert(name, material);
@@ -105,14 +108,18 @@ fn color_to_vec(color: Color) -> Vector3<f64> {
 }
 
 fn material_to_shader(material: &Material) -> Result<Box<Shader>, Error> {
-    let diffuse_shader : Box<Shader> = Box::new(DiffuseShader { color: color_to_vec(material.color_diffuse) });
+    let diffuse_shader: Box<Shader> = Box::new(DiffuseShader {
+        color: color_to_vec(material.color_diffuse),
+    });
     let specular_shader = SpecularShader { alpha: 10.0 }; // TODO FIXME use material.color_diffuse
-    let ambient_shader : Box<Shader> = Box::new(AmbientShader { light: color_to_vec(material.color_ambient) });
+    let ambient_shader: Box<Shader> = Box::new(color_to_vec(material.color_ambient));
     match material.illumination {
         Illumination::Ambient => Ok(ambient_shader),
-        Illumination::AmbientDiffuse => Ok(0.5 * diffuse_shader +  0.5 * ambient_shader),
-        Illumination::AmbientDiffuseSpecular  => Ok(0.5 * diffuse_shader + specular_shader + 0.5 * ambient_shader),
-        Illumination::Reflection =>  Ok(Box::new(MirrorShader { initial_step: 1.0 })),
+        Illumination::AmbientDiffuse => Ok(0.5 * diffuse_shader + 0.5 * ambient_shader),
+        Illumination::AmbientDiffuseSpecular => {
+            Ok(0.5 * diffuse_shader + specular_shader + 0.5 * ambient_shader)
+        }
+        Illumination::Reflection => Ok(Box::new(MirrorShader { initial_step: 1.0 })),
         _ => Err(Error::from("Illumination not yet supported")),
     }
 }

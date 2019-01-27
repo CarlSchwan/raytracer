@@ -1,21 +1,21 @@
 use crate::intersection::Intersection;
 use crate::ray::Ray;
-use crate::world::Interceptable;
 use crate::shader::Shader;
-use na::{Unit, Vector3, Vector2};
+use crate::world::Interceptable;
+use na::{Unit, Vector2, Vector3};
 
 pub struct Plane {
     pub a: Vector3<f64>,
-	pub b: Vector3<f64>,
-	pub c: Vector3<f64>,
+    pub b: Vector3<f64>,
+    pub c: Vector3<f64>,
     pub shader: Box<Shader>,
 }
 
 impl Interceptable for Plane {
     fn intercept(&self, ray: &Ray) -> Option<(f64, Intersection)> {
-		let edge_ab = (self.a - self.b).normalize();
-		let edge_ac = (self.a - self.c).normalize();
-		let	normal = edge_ab.cross(&edge_ac);
+        let edge_ab = (self.a - self.b).normalize();
+        let edge_ac = (self.a - self.c).normalize();
+        let normal = edge_ab.cross(&edge_ac);
         let convergence_rate = ray.dir.into_inner().dot(&normal);
         if convergence_rate == 0.0 {
             return None;
