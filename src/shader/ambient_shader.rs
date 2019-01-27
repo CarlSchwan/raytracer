@@ -2,9 +2,7 @@ use crate::shader::Shader;
 use crate::world::World;
 use nalgebra::{Vector2, Vector3};
 
-pub struct AmbientShader {
-    pub light: Vector3<f64>,
-}
+pub type AmbientShader = Vector3<f64>;
 
 impl Shader for AmbientShader {
     fn get_appearance_for(
@@ -16,6 +14,6 @@ impl Shader for AmbientShader {
         _surface_pos: Vector2<f64>,
         _recursion_depth: u64,
     ) -> Vector3<f64> {
-        self.light
+        *self
     }
 }
