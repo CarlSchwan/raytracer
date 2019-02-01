@@ -3,6 +3,7 @@ use crate::shader::chess_shader::*;
 use crate::shader::diffuse_shader::*;
 use crate::shader::monochrome_shader::*;
 use crate::shader::specular_shader::*;
+use crate::shader::additive_shader::AdditiveShader;
 use crate::world::World;
 use image::Rgba;
 use nalgebra::{Vector2, Vector3};
@@ -40,7 +41,7 @@ pub trait Shader {
     }
 }
 
-pub fn get_phong(color: Vector3<f64>) -> AdditiveShader {
+pub fn get_phong<'a, 'b>(color: Vector3<f64>) -> AdditiveShader<'a, 'b> {
     let diffuse_shader: Box<Shader> = Box::new(DiffuseShader { color: color });
     let specular_shader = SpecularShader { alpha: 10.0 };
     let ambient_shader: Box<Shader> = Box::new(MonochromeShader {
