@@ -112,7 +112,9 @@ fn material_to_shader(material: &Material) -> Result<Box<Shader>, Error> {
         color: color_to_vec(material.color_diffuse),
     });
     let specular_shader = SpecularShader { alpha: 10.0 }; // TODO FIXME use material.color_diffuse
-    let ambient_shader: Box<Shader> = Box::new(AmbientShader{light:color_to_vec(material.color_ambient)});
+    let ambient_shader: Box<Shader> = Box::new(AmbientShader {
+        light: color_to_vec(material.color_ambient),
+    });
     match material.illumination {
         Illumination::Ambient => Ok(ambient_shader),
         Illumination::AmbientDiffuse => Ok(0.5 * diffuse_shader + 0.5 * ambient_shader),

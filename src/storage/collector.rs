@@ -1,6 +1,6 @@
 use crate::storage::bv_storage::*;
-use crate::storage::Bounded;
 use crate::storage::primitive_storage::PrimitiveStorage;
+use crate::storage::Bounded;
 use crate::world::Interceptable;
 
 pub struct Collector {

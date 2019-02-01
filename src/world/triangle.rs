@@ -49,7 +49,7 @@ impl Interceptable for Triangle {
                 pos: pos,
                 normal_at_surface: normal,
                 shader: &self.shader,
-                pos_on_surface: Vector2::new(u * edge1.norm(),v * edge2.norm()),
+                pos_on_surface: Vector2::new(u * edge1.norm(), v * edge2.norm()),
             };
 
             Some((t, intersection))
