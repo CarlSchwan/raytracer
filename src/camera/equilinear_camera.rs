@@ -46,7 +46,7 @@ impl Camera for EquilinearCamera {
                     dir: Unit::new_normalize(dir),
                     start: self.pos,
                 };
-                let rgb = world.color(ray, 10);
+                let rgb = world.color(ray, 3);
 
                 img.put_pixel(x, self.height - y - 1, rgb);
             }

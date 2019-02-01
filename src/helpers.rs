@@ -1,4 +1,4 @@
-use na::{Vector3,angle, Matrix};
+use na::{Vector3, angle, Matrix};
 use image::{Rgba, Rgb, Pixel};
 
 // It's easier to do everything with Vectors, and then convert them to colors

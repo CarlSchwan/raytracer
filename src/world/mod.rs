@@ -44,10 +44,14 @@ impl World {
     }
 
     pub fn next_intersection(&self, ray: &Ray) -> Option<Intersection> {
-        return if let Some((_dist, int)) = self.elements.intercept(ray) {
+        return if let Some((_dist, int)) = self.intercept(ray) {
             Some(int)
         } else {
             None
         };
     }
+
+	pub fn intercept(&self, ray: &Ray) -> Option<(f64, Intersection)> {
+		self.elements.intercept(ray)
+	}
 }
