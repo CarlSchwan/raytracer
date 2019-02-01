@@ -7,16 +7,16 @@ use crate::world::Interceptable;
 use std::f64;
 use crate::helpers::vector2polar;
 
-pub struct Sphere {
+pub struct Sphere<'a> {
     pub center: Vector3<f64>,
     pub radius: f64,
-    pub shader: Box<Shader>,
+    pub shader: &'a Shader,
     pub roll: f64,
     pub pitch: f64,
     pub yaw: f64,
 }
 
-impl Interceptable for Sphere {
+impl<'a> Interceptable for Sphere<'a> {
     fn intercept(&self, ray: &Ray) -> Option<(f64, Intersection)> {
         let h = ray.start - self.center; // vector, needs to be summed/normed before utilisation
 
@@ -45,7 +45,7 @@ impl Interceptable for Sphere {
                                  Intersection {
                                     pos: pos,
                                     normal_at_surface: pos_to_center,
-                                    shader: &self.shader,
+                                    shader: self.shader,
                                     pos_on_surface: Vector2::new(vertical_angle * self.radius, horizontal_angle * self.radius),
                         }));
                 }
@@ -67,7 +67,7 @@ fn min(v: Vec<&f64>) -> Option<f64> {
     return ret;
 }
 
-impl Bounded for Sphere {
+impl<'a> Bounded for Sphere<'a> {
     fn get_min(&self) -> Vector3<f64> {
         Vector3::new(
             self.center.x - self.radius,

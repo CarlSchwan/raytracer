@@ -3,12 +3,12 @@ use crate::world::World;
 use nalgebra::{Vector2, Vector3};
 use std::ops::Add;
 
-pub struct AdditiveShader {
-    pub shader1: Box<Shader>,
-    pub shader2: Box<Shader>,
+pub struct AdditiveShader<'a, 'b> {
+    pub shader1: &'a Shader,
+    pub shader2: &'b Shader,
 }
 
-impl Shader for AdditiveShader {
+impl<'a, 'b> Shader for AdditiveShader<'a, 'b> {
     fn get_appearance_for(
         &self,
         intersection_pos: Vector3<f64>,
@@ -37,26 +37,25 @@ impl Shader for AdditiveShader {
         ap1 + ap2
     }
 }
-// Add 2 Boxed Shader
-impl Add for Box<Shader> {
-    type Output = Box<Shader>;
+impl<'a,'b> Add<&'b Shader> for &'a Shader {
+    type Output = AdditiveShader<'a,'b>;
 
-    fn add(self, other: Box<Shader>) -> Box<Shader> {
-        Box::new(AdditiveShader {
+    fn add(self, other: &'b Shader) -> AdditiveShader<'a,'b> {
+        AdditiveShader {
             shader1: self,
             shader2: other,
-        })
+        }
     }
 }
 
-// Add unboxed Shader to boxed shader (boxing is done here)
-impl<T: Shader + 'static> Add<T> for Box<Shader> {
-    type Output = Box<Shader>;
-
-    fn add(self, other: T) -> Box<Shader> {
-        Box::new(AdditiveShader {
-            shader1: self,
-            shader2: Box::new(other),
-        })
-    }
-}
+//// Add unboxed Shader to boxed shader (boxing is done here)
+//impl<T: Shader + 'static> Add<T> for Box<Shader> {
+//    type Output = Box<Shader>;
+//
+//    fn add(self, other: T) -> Box<Shader> {
+//        Box::new(AdditiveShader {
+//            shader1: self,
+//            shader2: Box::new(other),
+//        })
+//    }
+//}

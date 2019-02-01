@@ -4,14 +4,14 @@ use crate::shader::Shader;
 use crate::world::Interceptable;
 use na::{Unit, Vector2, Vector3};
 
-pub struct Plane {
+pub struct Plane<'a> {
     pub a: Vector3<f64>,
     pub b: Vector3<f64>,
     pub c: Vector3<f64>,
-    pub shader: Box<Shader>,
+    pub shader: &'a Shader,
 }
 
-impl Interceptable for Plane {
+impl<'a> Interceptable for Plane<'a> {
     fn intercept(&self, ray: &Ray) -> Option<(f64, Intersection)> {
         let edge_ab = (self.a - self.b).normalize();
         let edge_ac = (self.a - self.c).normalize();
@@ -35,7 +35,7 @@ impl Interceptable for Plane {
         let intersection = Intersection {
             pos: intersection_pos,
             normal_at_surface: normal,
-            shader: &self.shader,
+            shader: self.shader,
             pos_on_surface: Vector2::new((self.a -intersection_pos).dot(&edge_ab),(self.a - intersection_pos).dot(&edge_ac)),
         };
         return Some((intersection_distance, intersection));

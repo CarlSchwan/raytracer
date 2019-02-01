@@ -25,6 +25,7 @@ use crate::world::sphere::*;
 use na::{Unit, Vector3};
 use std::env;
 use crate::camera::Camera;
+use std::borrow::Borrow;
 
 fn main() -> Result<(), Error> {
     // Parse file given as args
@@ -33,23 +34,23 @@ fn main() -> Result<(), Error> {
     for argument in env::args().skip(1) {
         file_parser.parse(argument)?;
     }
-    let mut elements = file_parser.elements;
 
     // add some spheres
     let green_shader = get_phong(Vector3::new(0.0, 1.0, 0.0));
     let red_shader = get_phong(Vector3::new(1.0, 0.0, 0.0));
     let blue_shader = get_phong(Vector3::new(0.0, 0.0, 1.0));
-    let red_blue_shader = Box::new(chess_shader::ChessShader { shader1: red_shader, shader2: blue_shader, size:1.0});
+    let red_blue_shader = chess_shader::ChessShader { shader1: red_shader, shader2: blue_shader, size:1.0};
     let red_shader = get_phong(Vector3::new(1.0, 0.0, 0.0));
     let blue_shader = get_phong(Vector3::new(0.0, 0.0, 1.0));
-    let red_blue_shader2 = Box::new(chess_shader::ChessShader { shader1: red_shader, shader2: blue_shader, size:1.0});
+    let red_blue_shader2 = chess_shader::ChessShader { shader1: red_shader, shader2: blue_shader, size:1.0};
     let red_shader = get_phong(Vector3::new(1.0, 0.0, 0.0));
-    let blue_shader = get_phong(Vector3::new(0.0, 0.0, 1.0));
+    //let blue_shader = get_phong(Vector3::new(0.0, 0.0, 1.0)).borrow();
 
+    let mut elements = file_parser.elements;
     elements.add(Box::new(Sphere {
         center: Vector3::new(1.0, 1.0, 4.0),
         radius: 1.0,
-        shader: red_blue_shader,
+        shader: &red_blue_shader,
         pitch: 0.0,
         roll : 0.0,
         yaw : 0.0,
@@ -57,7 +58,7 @@ fn main() -> Result<(), Error> {
     elements.add(Box::new(Sphere {
         center: Vector3::new(0.0, 1.0, 6.0),
         radius: 1.0,
-        shader: red_shader,
+        shader: red_shader.borrow(),
         pitch: 0.0,
         roll : 0.0,
         yaw : 0.0,
@@ -65,7 +66,7 @@ fn main() -> Result<(), Error> {
     elements.add(Box::new(Sphere {
         center: Vector3::new(1.0, -1.0, 5.0),
         radius: 1.0,
-        shader: green_shader,
+        shader: green_shader.borrow(),
         pitch: 0.0,
         roll : 0.0,
         yaw : 0.0,
@@ -73,9 +74,9 @@ fn main() -> Result<(), Error> {
     elements.add(Box::new(Sphere {
         center: Vector3::new(2.0, 0.0, 9.0),
         radius: 1.0,
-        shader: Box::new(MirrorShader {
+        shader: &MirrorShader {
             initial_step: 0.001,
-        }),
+        },
         pitch: 0.0,
         roll : 0.0,
         yaw : 0.0,
@@ -84,7 +85,7 @@ fn main() -> Result<(), Error> {
         a: Vector3::new(0.0, 1.0, 0.0),
         b: Vector3::new(1.0, 1.0, 0.0),
         c: Vector3::new(0.0, 1.0, 1.0),
-        shader: red_blue_shader2,
+        shader: &red_blue_shader2,
     }));
 
     // add light

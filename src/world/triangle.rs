@@ -5,14 +5,14 @@ use crate::storage::Bounded;
 use crate::world::Interceptable;
 use na::{Vector2, Vector3};
 
-pub struct Triangle {
+pub struct Triangle<'a> {
     pub a: Vector3<f64>,
     pub b: Vector3<f64>,
     pub c: Vector3<f64>,
-    pub shader: Box<Shader>,
+    pub shader: &'a Shader,
 }
 
-impl Interceptable for Triangle {
+impl<'a> Interceptable for Triangle<'a> {
     // Shamelessly stolen from https://en.wikipedia.org/wiki/M%C3%B6ller%E2%80%93Trumbore_intersection_algorithm
     fn intercept(&self, ray: &Ray) -> Option<(f64, Intersection)> {
         let epsilon = 0.0001;
@@ -48,7 +48,7 @@ impl Interceptable for Triangle {
             let intersection = Intersection {
                 pos: pos,
                 normal_at_surface: normal,
-                shader: &self.shader,
+                shader: self.shader,
                 pos_on_surface: Vector2::new(u * edge1.norm(),v * edge2.norm()),
             };
 
@@ -59,7 +59,7 @@ impl Interceptable for Triangle {
     }
 }
 
-impl Bounded for Triangle {
+impl<'a> Bounded for Triangle<'a> {
     fn get_min(&self) -> Vector3<f64> {
         Vector3::new(
             self.a.x.min(self.b.x).min(self.c.x),

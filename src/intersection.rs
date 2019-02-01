@@ -7,7 +7,7 @@ pub struct Intersection<'a> {
     pub pos: Vector3<f64>,
     pub normal_at_surface: Vector3<f64>,
     pub pos_on_surface: Vector2<f64>,
-    pub shader: &'a Box<Shader>,
+    pub shader: &'a Shader,
 }
 
 impl<'a> Intersection<'a> {

@@ -2,9 +2,9 @@ use crate::shader::Shader;
 use crate::world::World;
 use nalgebra::{Vector2, Vector3};
 
-pub struct ChessShader {
-    pub shader1: Box<Shader>,
-    pub shader2: Box<Shader>,
+pub struct ChessShader<'a,'b> {
+    pub shader1: &'a Shader,
+    pub shader2: &'b Shader,
     pub size: f64, //size of squares
 }
 
@@ -19,7 +19,7 @@ fn my_mod(a: f64, b: f64) -> f64 {
     x
 }
 
-impl Shader for ChessShader {
+impl<'a,'b> Shader for ChessShader<'a,'b> {
     fn get_appearance_for(
         &self,
         _intersection_pos: Vector3<f64>,

@@ -13,6 +13,7 @@ use wavefront_obj::mtl::Material;
 use wavefront_obj::mtl::{parse as mtl_parse, Color, Illumination};
 use wavefront_obj::obj::parse as obj_parse;
 use wavefront_obj::obj::Primitive;
+use std::borrow::Borrow;
 
 /// FileParser struct
 /// Can parse obj and mtl wavefront files
@@ -81,7 +82,7 @@ impl FileParser {
                             }?;
 
                             self.elements
-                                .add_bounded(Box::new(Triangle { a, b, c, shader }));
+                                .add_bounded(Box::new(Triangle { a, b, c, shader :shader.borrow() }));
                         }
                         _ => (),
                     };
