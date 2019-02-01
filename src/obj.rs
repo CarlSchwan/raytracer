@@ -108,19 +108,30 @@ fn color_to_vec(color: Color) -> Vector3<f64> {
     Vector3::new(color.r, color.g, color.b)
 }
 
-fn material_to_shader(material: &Material) -> Result<Box<Shader>, Error> {
-    let diffuse_shader: Box<Shader> = Box::new(DiffuseShader {
+fn material_to_shader<'a>(material: &Material) -> Result<&'a Shader, Error> {
+    let diffuse_shader = DiffuseShader {
         color: color_to_vec(material.color_diffuse),
-    });
+    };
+    let diffuse_shader : &'a Shader = &diffuse_shader;
     let specular_shader = SpecularShader { alpha: 10.0 }; // TODO FIXME use material.color_diffuse
-    let ambient_shader: Box<Shader> = Box::new(AmbientShader{light:color_to_vec(material.color_ambient)});
+    let specular_shader : &'a Shader = &specular_shader;
+    let ambient_shader = AmbientShader{light:color_to_vec(material.color_ambient)};
+    let ambient_shader : &'a Shader = &ambient_shader;
     match material.illumination {
         Illumination::Ambient => Ok(ambient_shader),
-        Illumination::AmbientDiffuse => Ok(0.5 * diffuse_shader + 0.5 * ambient_shader),
+        Illumination::AmbientDiffuse => {
+            let d : &'a Shader = &(0.5 * diffuse_shader);
+            let a : &'a Shader = &(0.5 * ambient_shader);
+            Ok(&(a + d))
+        },
         Illumination::AmbientDiffuseSpecular => {
-            Ok(0.5 * diffuse_shader + specular_shader + 0.5 * ambient_shader)
+            let d : &'a Shader = &(0.5 * diffuse_shader);
+            let a : &'a Shader = &(0.5 * ambient_shader);
+            let ds : &'a Shader = &(a + specular_shader);
+            let dsa : &'a Shader = &(ds + a);
+            Ok(dsa)
         }
-        Illumination::Reflection => Ok(Box::new(MirrorShader { initial_step: 1.0 })),
+        Illumination::Reflection => Ok(&MirrorShader { initial_step: 1.0 }),
         _ => Err(Error::from("Illumination not yet supported")),
     }
 }

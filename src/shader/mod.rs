@@ -41,13 +41,17 @@ pub trait Shader {
     }
 }
 
-pub fn get_phong<'a, 'b>(color: Vector3<f64>) -> AdditiveShader<'a, 'b> {
-    let diffuse_shader: Box<Shader> = Box::new(DiffuseShader { color: color });
-    let specular_shader = SpecularShader { alpha: 10.0 };
-    let ambient_shader: Box<Shader> = Box::new(MonochromeShader {
+pub fn get_phong<'a>(color: Vector3<f64>) -> Box<Shader> {
+    let diffuse_shader: &'a Shader = & DiffuseShader { color: color };
+    let specular_shader: &'a Shader  = & SpecularShader { alpha: 10.0 };
+    let ambient_shader: &'a Shader = & MonochromeShader {
         color: Vector3::new(0.1, 0.1, 0.1),
-    });
-    return 0.5 * diffuse_shader + specular_shader + 0.5 * ambient_shader;
+    };
+    let a : &'a Shader = &(0.5 * diffuse_shader);
+    let a : &'a Shader = &(a + specular_shader);
+    let b : &'a Shader = &(0.5 * ambient_shader);
+    let a : &'a Shader = a + b;
+    return Box::new(a);
 }
 
 pub fn get_bw_chess<'a, 'b>() -> ChessShader<'a, 'b> {

@@ -1,7 +1,7 @@
 use crate::shader::Shader;
 use crate::world::World;
 use nalgebra::{Vector2, Vector3};
-use std::ops::Add;
+use std::ops::{Add, AddAssign};
 
 pub struct AdditiveShader<'a, 'b> {
     pub shader1: &'a Shader,
@@ -37,8 +37,8 @@ impl<'a, 'b> Shader for AdditiveShader<'a, 'b> {
         ap1 + ap2
     }
 }
-impl<'a,'b> Add<&'b Shader> for &'a Shader {
-    type Output = AdditiveShader<'a,'b>;
+impl<'a,'b:'a> Add<&'b Shader> for &'a Shader {
+    type Output = AdditiveShader<'a, 'b>;
 
     fn add(self, other: &'b Shader) -> AdditiveShader<'a,'b> {
         AdditiveShader {
@@ -47,15 +47,3 @@ impl<'a,'b> Add<&'b Shader> for &'a Shader {
         }
     }
 }
-
-//// Add unboxed Shader to boxed shader (boxing is done here)
-//impl<T: Shader + 'static> Add<T> for Box<Shader> {
-//    type Output = Box<Shader>;
-//
-//    fn add(self, other: T) -> Box<Shader> {
-//        Box::new(AdditiveShader {
-//            shader1: self,
-//            shader2: Box::new(other),
-//        })
-//    }
-//}

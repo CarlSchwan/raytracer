@@ -3,13 +3,18 @@ use crate::world::World;
 use nalgebra::{Vector2, Vector3};
 use std::ops::Mul;
 
-pub struct MultiplicativeShader<'a, 'b, T> {
-    pub alpha: & 'a T,
-    pub shader: & 'b Shader,
+pub struct MultiplicativeShader<'a> {
+    pub alpha: f64,
+    pub shader: & 'a Shader,
+}
+
+pub struct MultiplicativeShaders<'a, 'b> {
+    pub alpha: &'a Shader,
+    pub shader: &'b Shader,
 }
 
 // scalar * shader
-impl<'a,'b> Shader for MultiplicativeShader<'a,'b, f64> {
+impl<'a> Shader for MultiplicativeShader<'a> {
     fn get_appearance_for(
         &self,
         intersection_pos: Vector3<f64>,
@@ -19,7 +24,7 @@ impl<'a,'b> Shader for MultiplicativeShader<'a,'b, f64> {
         surface_pos: Vector2<f64>,
         recursion_depth: u64,
     ) -> Vector3<f64> {
-        *self.alpha
+        self.alpha
             * self.shader.get_appearance_for(
                 intersection_pos,
                 ray_dir,
@@ -31,7 +36,7 @@ impl<'a,'b> Shader for MultiplicativeShader<'a,'b, f64> {
     }
 }
 // shader * shader (dynamic dispatch)
-impl<'a,'b, T:Shader> Shader for MultiplicativeShader<'a,'b, T> {
+impl<'a,'b> Shader for MultiplicativeShaders<'a,'b> {
     fn get_appearance_for(
         &self,
         intersection_pos: Vector3<f64>,
@@ -63,9 +68,9 @@ impl<'a,'b, T:Shader> Shader for MultiplicativeShader<'a,'b, T> {
 
 // scalar * shader
 impl<'a> Mul<f64> for &'a Shader {
-    type Output = MultiplicativeShader<'static,'a, f64>;
+    type Output = MultiplicativeShader<'a>;
 
-    fn mul(self, other: f64) -> MultiplicativeShader<'static,'a, f64> {
+    fn mul(self, other: f64) -> MultiplicativeShader<'a> {
         MultiplicativeShader {
             shader: self,
             alpha: other,
@@ -74,18 +79,18 @@ impl<'a> Mul<f64> for &'a Shader {
 }
 // shader * scalar
 impl<'a> Mul<&'a Shader> for f64 {
-    type Output = MultiplicativeShader<'static, 'a, f64>;
+    type Output = MultiplicativeShader<'a>;
 
-    fn mul(self, other: &'a Shader) -> MultiplicativeShader<'static, 'a, f64> {
+    fn mul(self, other: &'a Shader) -> MultiplicativeShader<'a> {
         other.mul(self)
     }
 }
 // shader * shader (dynamic dispatch)
-impl<'a, 'b, T:Shader+'static> Mul<&'b T> for &'a Shader {
-    type Output = MultiplicativeShader<'a, 'b, T>;
+impl<'a, 'b:'a> Mul<&'b Shader> for &'a Shader {
+    type Output = MultiplicativeShaders<'a, 'b>;
 
-    fn mul(self, other: &'b T) ->  MultiplicativeShader<'a, 'b, T> {
-        MultiplicativeShader {
+    fn mul(self, other: &'b Shader) ->  MultiplicativeShaders<'a,'b>{
+        MultiplicativeShaders {
             alpha: self,
             shader: other,
         }
