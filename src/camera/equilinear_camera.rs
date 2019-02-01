@@ -5,6 +5,8 @@ use crate::world::World;
 use image::{DynamicImage, GenericImage};
 use na::{Rotation3, Unit, Vector3};
 use std::f64;
+use rayon::prelude::*;
+use std::sync::mpsc::channel;
 
 pub struct EquilinearCamera {
     pub height: u32,
@@ -35,22 +37,41 @@ impl Camera for EquilinearCamera {
         let vertical_half_canvas_size =
             (f64::consts::FRAC_PI_2 * self.vertical_viewangle / 180.0).tan();
         let rot_matrix = Rotation3::from_euler_angles(self.roll, self.pitch, self.yaw);
-        for x in 0..self.width {
-            for y in 0..self.height {
-                let xx = (2.0 * ((x as f64 + 0.5) * inv_width) - 1.0)
-                    * vertical_half_canvas_size
-                    * aspectratio;
-                let yy = (2.0 * ((y as f64 + 0.5) * inv_height) - 1.) * vertical_half_canvas_size;
-                let dir = rot_matrix * Vector3::new(xx, yy, 1.0).normalize();
-                let ray = Ray {
-                    dir: Unit::new_normalize(dir),
-                    start: self.pos,
-                };
-                let rgb = world.color(ray, 10);
 
-                img.put_pixel(x, self.height - y - 1, rgb);
+        let (sender, receiver) = channel();
+
+        let mut it = Vec::new();
+        for x in (0..self.width) {
+            for y in (0..self.height) {
+                it.push((x, y));
             }
         }
+
+        // cast ray parallel iterator and send value to second iterator
+        it.into_par_iter().for_each_with(sender, |s, (x, y)| {
+            let xx = (2.0 * ((x as f64 + 0.5) * inv_width) - 1.0)
+                * vertical_half_canvas_size
+                * aspectratio;
+            let yy = (2.0 * ((y as f64 + 0.5) * inv_height) - 1.0) * vertical_half_canvas_size;
+            let dir = rot_matrix * Vector3::new(xx, yy, 1.0).normalize();
+            let ray = Ray {
+                dir: Unit::new_normalize(dir),
+                start: self.pos,
+            };
+            let rgb = world.color(ray, 10);
+
+            sender.send((x, self.height - y - 1, rgb));
+        });
+
+        // receive ray value and put them in image object
+        for x in (0..self.width) {
+            for y in (0..self.height) {
+                let (x, y, rgb) = receiver.recv().unwrap();
+                println!("receving: {} {}", x, y);
+                img.put_pixel(x, y, rgb);
+            }
+        }
+
         img
     }
 }

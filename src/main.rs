@@ -1,7 +1,7 @@
 extern crate image;
 extern crate nalgebra as na;
-extern crate wavefront_obj;
 extern crate rayon;
+extern crate wavefront_obj;
 
 mod camera;
 mod error;
