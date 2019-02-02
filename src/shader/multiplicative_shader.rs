@@ -17,7 +17,7 @@ impl Shader for MultiplicativeShader<f64> {
         surface_normal: Vector3<f64>,
         world: &World,
         surface_pos: Vector2<f64>,
-        recursion_depth: u64,
+        recursion_depth: f64,
     ) -> Vector3<f64> {
         self.alpha
             * self.shader.get_appearance_for(
@@ -39,7 +39,7 @@ impl Shader for MultiplicativeShader<Box<Shader>> {
         surface_normal: Vector3<f64>,
         world: &World,
         surface_pos: Vector2<f64>,
-        recursion_depth: u64,
+        recursion_depth: f64,
     ) -> Vector3<f64> {
         let l = self.alpha.get_appearance_for(
             intersection_pos,
@@ -69,7 +69,7 @@ impl<T: Shader + 'static> Shader for MultiplicativeShader<Box<T>> {
         surface_normal: Vector3<f64>,
         world: &World,
         surface_pos: Vector2<f64>,
-        recursion_depth: u64,
+        recursion_depth: f64,
     ) -> Vector3<f64> {
         let l = self.alpha.get_appearance_for(
             intersection_pos,

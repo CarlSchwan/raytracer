@@ -15,7 +15,7 @@ impl<'a> Intersection<'a> {
         &self,
         ray_dir: Vector3<f64>,
         world: &World,
-        recursion_depth: u64,
+        recursion_depth: f64,
     ) -> Rgba<u8> {
         self.shader.get_color_for(
             self.pos,
@@ -30,7 +30,7 @@ impl<'a> Intersection<'a> {
         &self,
         ray_dir: Vector3<f64>,
         world: &World,
-        recursion_depth: u64,
+        recursion_depth: f64,
     ) -> Vector3<f64> {
         self.shader.get_appearance_for(
             self.pos,

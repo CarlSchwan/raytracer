@@ -15,7 +15,7 @@ pub trait Shader {
         surface_normal: Vector3<f64>,
         world: &World,
         surface_pos: Vector2<f64>,
-        recursion_depth: u64,
+        recursion_depth: f64,
     ) -> Vector3<f64>;
     //default implementation to get a rgb<u8> (instead of a vector<f64>)
     fn get_color_for(
@@ -25,7 +25,7 @@ pub trait Shader {
         surface_normal: Vector3<f64>,
         world: &World,
         surface_pos: Vector2<f64>,
-        recursion_depth: u64,
+        recursion_depth: f64,
     ) -> Rgba<u8> {
         let val = &self.get_appearance_for(
             intersection_pos,

@@ -16,7 +16,7 @@ impl Shader for AdditiveShader {
         surface_normal: Vector3<f64>,
         world: &World,
         surface_pos: Vector2<f64>,
-        recursion_depth: u64,
+        recursion_depth: f64,
     ) -> Vector3<f64> {
         let ap1 = self.shader1.get_appearance_for(
             intersection_pos,

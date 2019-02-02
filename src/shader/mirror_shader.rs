@@ -15,9 +15,9 @@ impl Shader for MirrorShader {
         surface_normal: Vector3<f64>,
         world: &World,
         _surface_pos: Vector2<f64>,
-        recursion_depth: u64,
+        recursion_depth: f64,
     ) -> Vector3<f64> {
-        if recursion_depth == 0 {
+        if recursion_depth < 1.0 {
             return Vector3::new(0.0, 0.0, 0.0);
         }
         let unit_normal = surface_normal.normalize();
@@ -27,6 +27,6 @@ impl Shader for MirrorShader {
             start: intersection_pos + mirror_ray_dir * self.initial_step,
             dir: Unit::new_normalize(mirror_ray_dir),
         };
-        world.appearance(mirror_ray, recursion_depth - 1)
+        world.appearance(mirror_ray, recursion_depth - 1.0)
     }
 }

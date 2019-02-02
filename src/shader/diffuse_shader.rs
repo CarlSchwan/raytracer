@@ -15,7 +15,7 @@ impl Shader for DiffuseShader {
         _surface_normal: Vector3<f64>,
         world: &World,
         _surface_pos: Vector2<f64>,
-        _recursion_depth: u64,
+        _recursion_depth: f64,
     ) -> Vector3<f64> {
         let mut i_diffuse = Vector3::new(0.0, 0.0, 0.0);
 

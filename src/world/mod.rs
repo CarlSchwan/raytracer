@@ -24,7 +24,7 @@ impl World {
         World { elements, lights }
     }
 
-    pub fn color(&self, ray: Ray, recursion_depth: u64) -> Rgba<u8> {
+    pub fn color(&self, ray: Ray, recursion_depth: f64) -> Rgba<u8> {
         if let Some(intersection) = self.next_intersection(&ray) {
             // touch something
             intersection.get_color(ray.dir.into_inner(), self, recursion_depth)
@@ -34,7 +34,7 @@ impl World {
         }
     }
 
-    pub fn appearance(&self, ray: Ray, recursion_depth: u64) -> Vector3<f64> {
+    pub fn appearance(&self, ray: Ray, recursion_depth: f64) -> Vector3<f64> {
         if let Some(intersection) = self.next_intersection(&ray) {
             // touch something
             intersection.get_appearance(ray.dir.into_inner(), self, recursion_depth)

@@ -10,13 +10,13 @@ pub struct AmbientShader {
 }
 
 impl AmbientShader {
-	fn evaluate_ray(&self, world: &World, recursion_depth: u64, int_pos: Vector3<f64>, initial_step: f64, ray_dir: Vector3<f64>, surface_normal: Vector3<f64>) -> Vector3<f64> {
+	fn evaluate_ray(&self, world: &World, recursion_depth: f64, int_pos: Vector3<f64>, initial_step: f64, ray_dir: Vector3<f64>, surface_normal: Vector3<f64>) -> Vector3<f64> {
 		let ray = Ray {
             start: int_pos + ray_dir * initial_step,
             dir: Unit::new_normalize(ray_dir),
         };
 		if let Some((dist, int)) =	world.intercept(&ray) {
-			int.get_appearance(ray.dir.into_inner(), world, recursion_depth - 1) 
+			(int.get_appearance(ray.dir.into_inner(), world, recursion_depth / 5.0) 
 			* (1.0/(1.0+dist/2.0)) * (1.0/(1.0+dist/2.0))
 			* ray.dir.dot(&surface_normal.normalize())
 		} else {
@@ -33,9 +33,9 @@ impl Shader for AmbientShader {
         surface_normal: Vector3<f64>,
         world: &World,
         _surface_pos: Vector2<f64>,
-        recursion_depth: u64,
+        recursion_depth: f64,
     ) -> Vector3<f64> {
-		if recursion_depth == 0 {
+		if recursion_depth < 1.0 {
 			return Vector3::new(0.0, 0.0, 0.0);
 		}
 		let initial_step = 0.001;

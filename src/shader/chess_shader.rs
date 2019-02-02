@@ -27,7 +27,7 @@ impl Shader for ChessShader {
         _surface_normal: Vector3<f64>,
         _world: &World,
         _surface_pos: Vector2<f64>,
-        _recursion_depth: u64,
+        _recursion_depth: f64,
     ) -> Vector3<f64> {
         let modulo = (_surface_pos / self.size).map(|x| if my_mod(x, 2.0) <= 1.0 { 0 } else { 1 });
         let chooser = modulo.dot(&modulo);
