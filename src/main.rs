@@ -25,6 +25,7 @@ use crate::world::plane::*;
 use crate::world::sphere::*;
 use na::{Unit, Vector3};
 use std::env;
+use std::f64;
 use crate::camera::Camera;
 
 fn main() -> Result<(), Error> {
@@ -37,7 +38,7 @@ fn main() -> Result<(), Error> {
     let mut elements = file_parser.elements;
 
     // add some spheres
-    let green_shader: Box<Shader> = Box::new(AmbientShader{}) ;
+    let green_shader: Box<Shader> = Box::new(AmbientShader{color: Vector3::new(0.0, 1.0, 0.0)}) ;
     let red_shader = get_phong(Vector3::new(1.0, 0.0, 0.0));
     let blue_shader = get_phong(Vector3::new(0.0, 0.0, 1.0));
     let red_blue_shader = Box::new(chess_shader::ChessShader { shader1: red_shader, shader2: blue_shader, size:1.0});
@@ -66,17 +67,18 @@ fn main() -> Result<(), Error> {
     elements.add(Box::new(Sphere {
         center: Vector3::new(2.0, -1.0, 5.0),
         radius: 1.0,
-        shader: green_shader + get_phong(Vector3::new(0.0, 1.0, 0.0)),
+        shader: get_phong(Vector3::new(0.0, 1.0, 0.0)),
         pitch: 0.0,
         roll : 0.0,
         yaw : 0.0,
     }));
+	let mirror: Box<Shader> = Box::new(MirrorShader {
+            initial_step: 0.001,
+        });
     elements.add(Box::new(Sphere {
         center: Vector3::new(1.0, 0.0, 7.0),
         radius: 1.0,
-        shader: Box::new(MirrorShader {
-            initial_step: 0.001,
-        }),
+        shader: mirror + 0.2 * get_phong(Vector3::new(0.0, 0.0, 1.0)),
         pitch: 0.0,
         roll : 0.0,
         yaw : 0.0,
@@ -91,12 +93,14 @@ fn main() -> Result<(), Error> {
     // add light
     let mut lights = Vec::new();
     lights.push(Light::new(0.0, -10.0, 6.0, Vector3::new(1.0, 0.5, 1.0)));
+    lights.push(Light::new(6.0, -10.0, 6.0, Vector3::new(0.5, 1.0, 1.0)));
+
 
     let cam = EquilinearCamera {width: 400,
                       height: 400,
                       roll:0.05, // down-up
-                      pitch: 0.2, //right-left
-                      yaw: 0.2, //rotation counterclockwise-clockwise
+                      pitch: -0.2, //right-left
+                      yaw: f64::consts::FRAC_PI_2 * 2.0, //rotation counterclockwise-clockwise
                       pos: Vector3::new(0.0,0.0,0.0),
                       vertical_viewangle:40.0,
                      };
