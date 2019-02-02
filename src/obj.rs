@@ -58,6 +58,10 @@ impl FileParser {
     fn parse_obj(&mut self, contents: String) -> Result<(), Error> {
         let obj_set = obj_parse(contents)?;
 
+        if let Some(material) = obj_set.material_library {
+            self.parse(material);
+        }
+        let mut last_material = None;
         for object in obj_set.objects {
             for geometry in object.geometry {
                 for shape in geometry.shapes {
@@ -74,16 +78,23 @@ impl FileParser {
                             let c = Vector3::new(vertices_c.x, vertices_c.y, vertices_c.z);
 
                             let shader = if let Some(name) = &geometry.material_name {
+                                println!("found color");
                                 let mat = self.materials.get(name).expect("Material don't exist");
+                                last_material = Some(mat);
                                 material_to_shader(mat)
                             } else {
-                                Ok(get_phong(Vector3::new(0.0, 1.0, 0.0)))
+                                if let Some(mat) = last_material {
+                                    material_to_shader(mat)
+                                } else { 
+                                    Ok(get_phong(Vector3::new(0.0, 1.0, 0.0)))
+                                }
                             }?;
 
+//                            println!("{:?} {} {} {}", primitive, a, b, c);
                             self.elements
-                                .add_bounded(Box::new(Triangle { a, b, c, shader }));
+                                .add(Box::new(Triangle { a, b, c, shader }));
                         }
-                        _ => (),
+                        _ => ()
                     };
                 }
             }

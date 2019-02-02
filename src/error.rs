@@ -7,6 +7,7 @@ use std::io;
 pub enum Error {
     ParseError(wavefront_obj::ParseError),
     Io(io::Error),
+    Time(std::time::SystemTimeError),
     Error(String),
 }
 
@@ -16,6 +17,7 @@ impl Display for Error {
             Error::Io(ref error) => error.fmt(formatter),
             Error::ParseError(ref error) => error.message.fmt(formatter),
             Error::Error(ref error) => error.fmt(formatter),
+            Error::Time(ref error) => error.fmt(formatter),
         }
     }
 }
@@ -23,6 +25,12 @@ impl Display for Error {
 impl From<wavefront_obj::ParseError> for Error {
     fn from(error: wavefront_obj::ParseError) -> Self {
         Error::ParseError(error)
+    }
+}
+
+impl From<std::time::SystemTimeError> for Error {
+    fn from(error: std::time::SystemTimeError) -> Self {
+        Error::Time(error)
     }
 }
 

@@ -4,8 +4,8 @@ use crate::storage::Bounded;
 use crate::world::Interceptable;
 
 pub struct Collector {
-    bounded_elements: Vec<Box<Bounded>>,
-    elements: Vec<Box<Interceptable + 'static>>,
+    pub bounded_elements: Vec<Box<Bounded>>,
+    pub elements: Vec<Box<Interceptable + 'static>>,
 }
 
 impl<'a> Collector {
