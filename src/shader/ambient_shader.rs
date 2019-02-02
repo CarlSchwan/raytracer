@@ -46,10 +46,14 @@ impl Shader for AmbientShader {
 		let ray_dir = rot_matrix * polar2vector(0.0, 0.0);
         let mut appereance = self.evaluate_ray(world, recursion_depth, intersection_pos, initial_step, ray_dir, surface_normal);
 
-		for i in 1..4 {
+		for i in 1..5 {
 			let ray_dir = rot_matrix * polar2vector(f64::consts::FRAC_PI_2/10.0, f64::consts::FRAC_PI_2 * i as f64);
 			appereance += self.evaluate_ray(world, recursion_depth, intersection_pos, initial_step, ray_dir, surface_normal);
 		}
-		appereance / 4.0
+		for i in 1..7 {
+			let ray_dir = rot_matrix * polar2vector(f64::consts::FRAC_PI_2/5.0, f64::consts::FRAC_PI_2 / 1.5 * i as f64);
+			appereance += self.evaluate_ray(world, recursion_depth, intersection_pos, initial_step, ray_dir, surface_normal);
+		}
+		appereance / 8.0
     }
 }
