@@ -1,6 +1,6 @@
 use crate::error::Error;
 use crate::shader::{
-    diffuse_shader::DiffuseShader, get_phong, mirror_shader::MirrorShader,
+    diffuse_shader::DiffuseShader, get_phong, mirror_shader::MirrorShader, ambient_shader::AmbientShader,
     monochrome_shader::MonochromeShader, specular_shader::SpecularShader, Shader,
 };
 use crate::storage::collector::Collector;
@@ -112,7 +112,7 @@ fn material_to_shader(material: &Material) -> Result<Box<Shader>, Error> {
         color: color_to_vec(material.color_diffuse),
     });
     let specular_shader = SpecularShader { alpha: 10.0 }; // TODO FIXME use material.color_diffuse
-    let ambient_shader: Box<Shader> = Box::new(MonochromeShader {
+    let ambient_shader: Box<Shader> = Box::new(AmbientShader {
         color: color_to_vec(material.color_ambient),
     });
     match material.illumination {

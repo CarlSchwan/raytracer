@@ -22,7 +22,7 @@ use crate::shader::*;
 use crate::world::light::Light;
 use crate::world::plane::*;
 use crate::world::sphere::*;
-use na::{Unit, Vector3};
+use na::Vector3;
 use std::env;
 use std::f64;
 use std::rc::Rc;
@@ -106,11 +106,11 @@ fn main() -> Result<(), Error> {
     lights.push(Light::new(6.0, -10.0, 6.0, Vector3::new(0.5, 1.0, 1.0)));
 
     let cam = EquilinearCamera {
-        width: 400,
-        height: 400,
-        roll: 0.05,                        // down-up
-        pitch: -0.2,                       //right-left
-        yaw: f64::consts::FRAC_PI_2 * 2.0, //rotation counterclockwise-clockwise
+        width: 300,
+        height: 150,
+        roll: -0.2, // down-up
+        pitch: 0.2, //right-left
+        yaw: 0.2,   //rotation counterclockwise-clockwise
         pos: Vector3::new(0.0, 0.0, 0.0),
         vertical_viewangle: 40.0,
     };

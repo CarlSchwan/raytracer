@@ -2,7 +2,7 @@ use crate::intersection::Intersection;
 use crate::ray::Ray;
 use crate::shader::Shader;
 use crate::world::Interceptable;
-use na::{Unit, Vector2, Vector3};
+use na::{Vector2, Vector3};
 
 pub struct Plane {
     pub a: Vector3<f64>,
