@@ -1,5 +1,5 @@
-use na::{Vector3, angle, Matrix};
-use image::{Rgba, Rgb, Pixel};
+use image::{Pixel, Rgb, Rgba};
+use na::{angle, Matrix, Vector3};
 
 // It's easier to do everything with Vectors, and then convert them to colors
 //pub fn color2vector(c : &Rgba<f64>) -> Vector3<f64> {

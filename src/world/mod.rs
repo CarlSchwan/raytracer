@@ -51,7 +51,7 @@ impl World {
         };
     }
 
-	pub fn intercept(&self, ray: &Ray) -> Option<(f64, Intersection)> {
-		self.elements.intercept(ray)
-	}
+    pub fn intercept(&self, ray: &Ray) -> Option<(f64, Intersection)> {
+        self.elements.intercept(ray)
+    }
 }

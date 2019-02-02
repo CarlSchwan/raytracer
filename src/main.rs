@@ -12,12 +12,11 @@ mod shader;
 mod storage;
 mod world;
 
-use crate::shader::ambient_shader::AmbientShader;
 use crate::camera::equilinear_camera::*;
-use wavefront_obj::obj::*;
-use crate::obj::FileParser;
-use std::rc::Rc;
+use crate::camera::Camera;
 use crate::error::Error;
+use crate::obj::FileParser;
+use crate::shader::ambient_shader::AmbientShader;
 use crate::shader::mirror_shader::MirrorShader;
 use crate::shader::*;
 use crate::world::light::Light;
@@ -26,7 +25,8 @@ use crate::world::sphere::*;
 use na::{Unit, Vector3};
 use std::env;
 use std::f64;
-use crate::camera::Camera;
+use std::rc::Rc;
+use wavefront_obj::obj::*;
 
 fn main() -> Result<(), Error> {
     // Parse file given as args
@@ -38,13 +38,23 @@ fn main() -> Result<(), Error> {
     let mut elements = file_parser.elements;
 
     // add some spheres
-    let green_shader: Box<Shader> = Box::new(AmbientShader{color: Vector3::new(0.0, 1.0, 0.0)}) ;
+    let green_shader: Box<Shader> = Box::new(AmbientShader {
+        color: Vector3::new(0.0, 1.0, 0.0),
+    });
     let red_shader = get_phong(Vector3::new(1.0, 0.0, 0.0));
     let blue_shader = get_phong(Vector3::new(0.0, 0.0, 1.0));
-    let red_blue_shader = Box::new(chess_shader::ChessShader { shader1: red_shader, shader2: blue_shader, size:1.0});
+    let red_blue_shader = Box::new(chess_shader::ChessShader {
+        shader1: red_shader,
+        shader2: blue_shader,
+        size: 1.0,
+    });
     let red_shader = get_phong(Vector3::new(1.0, 0.0, 0.0));
     let blue_shader = get_phong(Vector3::new(0.0, 0.0, 1.0));
-    let red_blue_shader2 = Box::new(chess_shader::ChessShader { shader1: red_shader, shader2: blue_shader, size:1.0});
+    let red_blue_shader2 = Box::new(chess_shader::ChessShader {
+        shader1: red_shader,
+        shader2: blue_shader,
+        size: 1.0,
+    });
     let red_shader = get_phong(Vector3::new(1.0, 0.0, 0.0));
     let blue_shader = get_phong(Vector3::new(0.0, 0.0, 1.0));
 
@@ -53,35 +63,35 @@ fn main() -> Result<(), Error> {
         radius: 1.0,
         shader: red_blue_shader,
         pitch: 0.0,
-        roll : 0.0,
-        yaw : 0.0,
+        roll: 0.0,
+        yaw: 0.0,
     }));
     elements.add(Box::new(Sphere {
         center: Vector3::new(0.0, 1.0, 6.0),
         radius: 1.0,
         shader: red_shader,
         pitch: 0.0,
-        roll : 0.0,
-        yaw : 0.0,
+        roll: 0.0,
+        yaw: 0.0,
     }));
     elements.add(Box::new(Sphere {
         center: Vector3::new(2.0, -1.0, 5.0),
         radius: 1.0,
         shader: get_phong(Vector3::new(0.0, 1.0, 0.0)),
         pitch: 0.0,
-        roll : 0.0,
-        yaw : 0.0,
+        roll: 0.0,
+        yaw: 0.0,
     }));
-	let mirror: Box<Shader> = Box::new(MirrorShader {
-            initial_step: 0.001,
-        });
+    let mirror: Box<Shader> = Box::new(MirrorShader {
+        initial_step: 0.001,
+    });
     elements.add(Box::new(Sphere {
         center: Vector3::new(1.0, 0.0, 7.0),
         radius: 1.0,
         shader: mirror + 0.2 * get_phong(Vector3::new(0.0, 0.0, 1.0)),
         pitch: 0.0,
-        roll : 0.0,
-        yaw : 0.0,
+        roll: 0.0,
+        yaw: 0.0,
     }));
     elements.add(Box::new(Plane {
         a: Vector3::new(0.0, 1.0, 0.0),
@@ -95,15 +105,15 @@ fn main() -> Result<(), Error> {
     lights.push(Light::new(0.0, -10.0, 6.0, Vector3::new(1.0, 0.5, 1.0)));
     lights.push(Light::new(6.0, -10.0, 6.0, Vector3::new(0.5, 1.0, 1.0)));
 
-
-    let cam = EquilinearCamera {width: 400,
-                      height: 400,
-                      roll:0.05, // down-up
-                      pitch: -0.2, //right-left
-                      yaw: f64::consts::FRAC_PI_2 * 2.0, //rotation counterclockwise-clockwise
-                      pos: Vector3::new(0.0,0.0,0.0),
-                      vertical_viewangle:40.0,
-                     };
+    let cam = EquilinearCamera {
+        width: 400,
+        height: 400,
+        roll: 0.05,                        // down-up
+        pitch: -0.2,                       //right-left
+        yaw: f64::consts::FRAC_PI_2 * 2.0, //rotation counterclockwise-clockwise
+        pos: Vector3::new(0.0, 0.0, 0.0),
+        vertical_viewangle: 40.0,
+    };
 
     let w = world::World::new(elements.into_storage(), lights);
     let image = cam.render(&w);
