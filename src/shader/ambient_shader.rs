@@ -7,6 +7,7 @@ use nalgebra::{Vector2, Vector3, Rotation3, Unit};
 use std::f64;
 
 pub struct AmbientShader {
+	pub color: Vector3<f64>
 }
 
 impl AmbientShader {
@@ -18,7 +19,7 @@ impl AmbientShader {
 		if let Some((dist, int)) =	world.intercept(&ray) {
 			(int.get_appearance(ray.dir.into_inner(), world, recursion_depth / 5.0) 
 			* (1.0/(1.0+dist/2.0)) * (1.0/(1.0+dist/2.0))
-			* ray.dir.dot(&surface_normal.normalize())
+			* ray.dir.dot(&surface_normal.normalize())).component_mul(&self.color)
 		} else {
 			Vector3::new(0.0, 0.0, 0.0)
 		}
