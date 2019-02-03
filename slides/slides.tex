@@ -1,0 +1,217 @@
+\documentclass{beamer}
+
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+
+\usepackage{amsmath, amssymb, amstext}
+\usepackage{stmaryrd}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{appendixnumberbeamer}
+\usepackage{enumerate}
+\usepackage{listings}
+\usepackage{lstautogobble}
+\usepackage{multicol}
+\usepackage{lmodern}
+\usepackage{lipsum}
+\usepackage{marvosym}
+
+\usetheme{metropolis}
+
+\metroset{%
+    block=fill
+}
+
+\newcommand{\code}[1]{\colorbox{lightgray}{\vphantom{|}\texttt{#1}}}
+\newcommand{\cmd}[1]{\code{\$ #1}}
+\newcommand{\gitcmd}[1]{\cmd{git #1}}
+
+\titlegraphic{%
+    \includegraphics[height=1cm]{rust-logo}
+}
+
+\title{Raytracing}
+\subtitle{Rust Proseminar}
+
+\author[Sami Shalayel, Daniel Freiermuth, Carl Schwan]{%
+    Autoren: Sami Shalayel, Daniel Freiermuth, Carl Schwan]}
+
+\institute{Universität des Saarlandes}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{frame}{Überblick}
+    \setbeamertemplate{section in toc}[sections numbered]
+    \tableofcontents[hideallsubsections]
+\end{frame}
+
+\section{Projekt Stuckture}
+\begin{frame}[fragile]{Primitive Objekte: Interceptable Trait}
+    \begin{lstlisting}
+pub trait Interceptable {
+    fn intercept(&self, ray: &Ray)
+        -> Option<(f64, Intersection)>;
+}
+    \end{lstlisting}
+    \begin{lstlisting}
+pub struct Intersection<'a> {
+    pub pos: Vector3<f64>,
+    pub normal_at_surface: Vector3<f64>,
+    pub pos_on_surface: Vector2<f64>,
+    pub shader: &'a Box<Shader>,
+}
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}{Primitive Objekte: Interceptable Trait}
+    \begin{itemize}
+        \item Sphere
+        \item Plane
+        \item Triangle
+    \end{itemize}
+    TODO graphics
+\end{frame}
+
+
+\begin{frame}[fragile]{Shaders: Shader Trait}
+    \begin{lstlisting}
+pub trait Shader {
+    fn get_appearance_for(
+        &self,
+        intersection_pos: Vector3<f64>,
+        ray_dir: Vector3<f64>,
+        surface_normal: Vector3<f64>,
+        world: &World,
+        surface_pos: Vector2<f64>,
+        recursion_depth: u64,
+    ) -> Vector3<f64>;
+    ...
+    \end{lstlisting}
+\end{frame}
+\begin{frame}[fragile]{Shaders: Shader Trait}
+    \begin{lstlisting}
+    ...
+    fn get_color_for(
+        &self,
+        intersection_pos: Vector3<f64>,
+        ray_dir: Vector3<f64>,
+        surface_normal: Vector3<f64>,
+        world: &World,
+        surface_pos: Vector2<f64>,
+        recursion_depth: u64,
+    ) -> Rgba<u8>;
+}
+    \end{lstlisting}
+\end{frame}
+\begin{frame}{Shaders: Implementierung}
+    \begin{itemize}[<+->]
+        \item Monochrome shader
+        \item Chess shader
+        \item Diffuse shader
+        \item Mirror shader
+        \item Specular shader
+        \item Multiplicative shader
+        \item Additive shader
+    \end{itemize}
+\end{frame}
+\begin{frame}[fragile]{Phong Shader}
+    \begin{lstlisting}
+pub fn get_phong(color: Vector3<f64>)
+-> Box<Shader> {
+    let diffuse_shader: Box<Shader> =
+Box::new(DiffuseShader { color: color });
+    let specular_shader = SpecularShader
+{ alpha: 10.0 };
+    let ambient_shader: Box<Shader> =
+    Box::new(MonochromeShader {
+        color: Vector3::new(0.1, 0.1, 0.1),
+    });
+    return 0.5 * diffuse_shader + specular_shader
++ 0.5 * ambient_shader;
+}
+    \end{lstlisting}
+\end{frame}
+\begin{frame}{Shaders: Shader Trait}
+    \begin{columns}[t]
+        \column{.5\textwidth}
+        \centering
+        \includegraphics[height=3cm]{example-true-ambiant} \\
+        \includegraphics[height=3cm]{example-mirror}
+        \column{.5\textwidth}
+        \centering
+        \includegraphics[height=3cm]{example-mirror2}
+    \end{columns}
+\end{frame}
+\begin{frame}[fragile]{Camera Trait}
+    \begin{lstlisting}
+pub trait Camera {
+    fn render(&self, world: &World) -> DynamicImage;
+}
+    \end{lstlisting}
+\end{frame}
+\begin{frame}{Cameras: Implemtierung}
+    \begin{itemize}[<+->]
+        \item Equilinear Camera
+        \item Equirectangular Camera
+    \end{itemize}
+\end{frame}
+\begin{frame}{Wavefront Parser}
+    \begin{itemize}[<+->]
+        \item Wavefront Obj parser
+        \item Wavefron Mtl parser
+    \end{itemize}
+    Benutzt die wavefront_obj crate
+\end{frame}
+\begin{frame}{Wavefront Parser}
+    \includegraphics[height=3cm]{example-duck}
+\end{frame}
+\begin{frame}{Storage und World}
+    TODO Explanation storage
+\end{frame}
+\section{Rust in unsere Projekt}
+\begin{frame}[fragile]{Operator overload}
+    \begin{lstlisting}
+impl Add for Box<Shader> {
+    type Output = Box<Shader>;
+    fn add(self, other: Box<Shader>) -> Box<Shader> {
+        Box::new(AdditiveShader {
+            shader1: self,
+            shader2: other,
+        })
+    }
+}
+    \end{lstlisting}
+\end{frame}
+\begin{frame}{Nalebra und std::f64}
+    TODO
+\end{frame}
+\begin{frame}{Error Handling}
+    TODO
+\end{frame}
+\section{Störend in Rust}
+\begin{frame}{Störend in Rust}
+    \begin{itemize}[<+->]
+        \item Mehr Arbeit durch Borrow-Checker/Lifetimes
+        \item Rayon 
+    \end{itemize}
+\end{frame}
+\section{Lesons learned}
+\begin{frame}{Lesons learned}
+    \begin{itemize}[<+->]
+        \item Reference in Struct -> Lifetime
+        \item Serde
+        \item ...
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[standout]
+\centering
+\Huge Vielen Dank für eure Aufmerksamkeit!
+
+\end{frame}
+
+\end{document}
