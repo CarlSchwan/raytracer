@@ -1,30 +1,20 @@
 extern crate image;
 extern crate nalgebra as na;
-extern crate wavefront_obj;
 
-mod camera;
-mod error;
-mod helpers;
-mod intersection;
-mod obj;
-mod ray;
-mod shader;
-mod storage;
-mod world;
-
-use crate::camera::equilinear_camera::*;
-use crate::camera::Camera;
-use crate::error::Error;
-use crate::obj::FileParser;
-use crate::shader::mirror_shader::MirrorShader;
-use crate::shader::*;
-use crate::world::light::Light;
-use crate::world::plane::*;
-use crate::world::sphere::*;
+use libraytracing::camera::equilinear_camera::*;
+use libraytracing::camera::Camera;
+use libraytracing::error::Error;
+use libraytracing::obj::FileParser;
+use libraytracing::shader::mirror_shader::MirrorShader;
+use libraytracing::shader::*;
+use libraytracing::world::World;
+use libraytracing::world::light::Light;
+use libraytracing::world::plane::*;
+use libraytracing::world::sphere::*;
+use libraytracing::storage::primitive_storage::PrimitiveStorage;
 use na::Vector3;
 use std::env;
 use std::time::{SystemTime, UNIX_EPOCH};
-use crate::storage::primitive_storage::PrimitiveStorage;
 
 fn main() -> Result<(), Error> {
     println!("Start parsing");
@@ -110,8 +100,8 @@ fn main() -> Result<(), Error> {
         pos: Vector3::new(200.0, 0.0, 300.0),
         vertical_viewangle: 40.0,
     };
-    let w = world::World::new(Box::new(PrimitiveStorage { elements: elements.elements }), lights);
-    let image = cam.render(&w);
+    let w = World::new(Box::new(PrimitiveStorage { elements: elements.elements }), lights);
+    let image = cam.render(&w, true);
     let name = format!("output{:?}.png", SystemTime::now().duration_since(UNIX_EPOCH)?.as_secs());
     image.save(name).expect("Could not save image!");
     Ok(())

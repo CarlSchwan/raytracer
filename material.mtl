@@ -1,0 +1,84 @@
+newmtl DWhite
+Ns 10.000                # ranges between 0 and 1000
+Ka 1.000 1.000 1.000     # white
+Kd 1.000 1.000 1.000     # white
+Ks 0.000 0.000 0.000     # black (off)
+d 0.9                    # some implementations use 'd'
+illum 2
+newmtl DBody
+Ns 10.000                # ranges between 0 and 1000
+Ka 1.000 1.000 0.100     # yellow
+Kd 1.000 1.000 0.100     # yellow
+Ks 1.000 1.000 0.100     # yellow
+d 0.9                    # some implementations use 'd'
+illum 2
+newmtl DBill
+Ns 10.000                # ranges between 0 and 1000
+Ka 1.000 0.500 0.400     # yellow
+Kd 1.000 0.500 0.400     # yellow
+Ks 1.000 0.500 0.400     # yellow
+d 0.9                    # some implementations use 'd'
+illum 2
+newmtl DBlack
+Ns 10.000                # ranges between 0 and 1000
+Ka 0.000 0.000 0.000     # white
+Kd 0.000 0.000 0.000     # white
+Ks 0.000 0.000 0.000     # black (off)
+d 0.9                    # some implementations use 'd'
+illum 2
+newmtl Head
+Ns 10.000                # ranges between 0 and 1000
+Ka 0.000 0.000 0.000     # white
+Kd 0.000 0.000 0.000     # white
+Ks 0.000 0.000 0.000     # black (off)
+d 0.9                    # some implementations use 'd'
+illum 2
+newmtl Body
+Ns 10.000                # ranges between 0 and 1000
+Ka 0.000 0.000 0.000     # white
+Kd 0.000 0.000 0.000     # white
+Ks 0.000 0.000 0.000     # black (off)
+d 0.9                    # some implementations use 'd'
+illum 2
+newmtl Wings
+Ns 10.000                # ranges between 0 and 1000
+Ka 1.000 0.000 0.000     # white
+Kd 1.000 0.000 0.000     # white
+Ks 1.000 0.000 0.000     # black (off)
+d 0.9                    # some implementations use 'd'
+illum 2
+newmtl Thorax
+Ns 10.000                # ranges between 0 and 1000
+Ka 0.000 0.000 0.000     # white
+Kd 0.000 0.000 0.000     # white
+Ks 0.000 0.000 0.000     # black (off)
+d 0.9                    # some implementations use 'd'
+illum 2
+newmtl Motor
+Ns 10.000                # ranges between 0 and 1000
+Ka 0.900 0.900 0.900     # white
+Kd 0.900 0.900 0.900     # white
+Ks 0.900 0.900 0.900     # black (off)
+d 0.9                    # some implementations use 'd'
+illum 2
+newmtl T_Wheel
+Ns 10.000                # ranges between 0 and 1000
+Ka 0.900 0.900 0.900     # white
+Kd 0.900 0.900 0.900     # white
+Ks 0.900 0.900 0.900     # black (off)
+d 0.9                    # some implementations use 'd'
+illum 2
+newmtl T_Rubber
+Ns 10.000                # ranges between 0 and 1000
+Ka 0.500 0.500 0.500     # white
+Kd 0.500 0.500 0.500     # white
+Ks 0.000 0.000 0.000     # black (off)
+d 0.9                    # some implementations use 'd'
+illum 2
+newmtl T_Metal
+Ns 10.000                # ranges between 0 and 1000
+Ka 0.800 0.800 0.800     # white
+Kd 0.800 0.800 0.800     # white
+Ks 0.800 0.800 0.800     # black (off)
+d 0.9                    # some implementations use 'd'
+illum 2

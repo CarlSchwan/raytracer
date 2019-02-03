@@ -4,5 +4,5 @@ use crate::world::World;
 use image::DynamicImage;
 
 pub trait Camera {
-    fn render(&self, world: &World) -> DynamicImage;
+    fn render(&self, world: &World, progess: bool) -> DynamicImage;
 }

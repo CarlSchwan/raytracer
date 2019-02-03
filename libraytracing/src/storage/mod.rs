@@ -3,7 +3,7 @@ use crate::ray::Ray;
 use crate::world::Interceptable;
 use na::Vector3;
 
-mod bv_storage;
+pub mod bv_storage;
 pub mod collector;
 pub mod primitive_storage;
 

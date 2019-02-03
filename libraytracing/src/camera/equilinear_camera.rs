@@ -27,7 +27,7 @@ impl EquilinearCamera {
 }
 
 impl Camera for EquilinearCamera {
-    fn render(&self, world: &World) -> DynamicImage {
+    fn render(&self, world: &World, progress: bool) -> DynamicImage {
         // algorithm for direction taken from https://www.scratchapixel.com/code.php?id=3&origin=/lessons/3d-basic-rendering/introduction-to-ray-tracing
         let mut img = DynamicImage::new_rgb8(self.width, self.height);
         let inv_width = 1.0 / self.width as f64;
@@ -36,7 +36,11 @@ impl Camera for EquilinearCamera {
         let vertical_half_canvas_size =
             (f64::consts::FRAC_PI_2 * self.vertical_viewangle / 180.0).tan();
         let rot_matrix = Rotation3::from_euler_angles(self.roll, self.pitch, self.yaw);
-        let bar = ProgressBar::new((self.width * self.height).into());
+        let bar = if progress {
+            Some(ProgressBar::new((self.width * self.height).into()))
+        } else {
+            None
+        };
         for x in 0..self.width {
             for y in 0..self.height {
                 let xx = (2.0 * ((x as f64 + 0.5) * inv_width) - 1.0)
@@ -51,10 +55,15 @@ impl Camera for EquilinearCamera {
                 let rgb = world.color(ray, 10);
 
                 img.put_pixel(x, self.height - y - 1, rgb);
-                bar.inc(1);
+                if let Some(bar) = &bar {
+                    bar.inc(1);
+                }
+
             }
         }
-        bar.finish();
+        if let Some(bar) = bar {
+            bar.finish();
+        }
         img
     }
 }
