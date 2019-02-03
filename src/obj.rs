@@ -78,7 +78,6 @@ impl FileParser {
                             let c = Vector3::new(vertices_c.x, vertices_c.y, vertices_c.z);
 
                             let shader = if let Some(name) = &geometry.material_name {
-                                println!("found color");
                                 let mat = self.materials.get(name).expect("Material don't exist");
                                 last_material = Some(mat);
                                 material_to_shader(mat)
@@ -90,9 +89,7 @@ impl FileParser {
                                 }
                             }?;
 
-//                            println!("{:?} {} {} {}", primitive, a, b, c);
-                            self.elements
-                                .add(Box::new(Triangle { a, b, c, shader }));
+                            self.elements.add(Box::new(Triangle { a, b, c, shader }));
                         }
                         _ => ()
                     };

@@ -99,15 +99,15 @@ fn main() -> Result<(), Error> {
 
     // add light
     let mut lights = Vec::new();
-    lights.push(Light::new(0.0, -10.0, 6.0, Vector3::new(1.0, 1.0, 1.0)));
+    lights.push(Light::new(700.0, 50.0, 600.0, Vector3::new(1.0, 1.0, 1.0)));
 
     let mut cam = EquilinearCamera {
-        width: 192,
-        height: 108,
-        roll: -0.3, // down-up
-        pitch: 0.0, //right-left
+        width: 1200,
+        height: 800,
+        roll: 0.0, // down-up
+        pitch: 3.7, //right-left
         yaw: 0.0,   //rotation counterclockwise-clockwise
-        pos: Vector3::new(0.0, 150.0, -600.0),
+        pos: Vector3::new(200.0, 0.0, 300.0),
         vertical_viewangle: 40.0,
     };
     let w = world::World::new(Box::new(PrimitiveStorage { elements: elements.elements }), lights);
