@@ -78,7 +78,8 @@ impl FileParser {
                             let c = Vector3::new(vertices_c.x, vertices_c.y, vertices_c.z);
 
                             let shader = if let Some(name) = &geometry.material_name {
-                                let mat = self.materials.get(name).expect("Material don't exist");
+                                let mat = self.materials.get(name)
+                                    .expect(&format!("Material don't exist: {}", name));
                                 last_material = Some(mat);
                                 material_to_shader(mat)
                             } else {

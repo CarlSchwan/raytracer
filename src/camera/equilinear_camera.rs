@@ -5,6 +5,7 @@ use crate::world::World;
 use image::{DynamicImage, GenericImage};
 use na::{Rotation3, Unit, Vector3};
 use std::f64;
+use indicatif::ProgressBar;
 
 pub struct EquilinearCamera {
     pub height: u32,
@@ -35,6 +36,7 @@ impl Camera for EquilinearCamera {
         let vertical_half_canvas_size =
             (f64::consts::FRAC_PI_2 * self.vertical_viewangle / 180.0).tan();
         let rot_matrix = Rotation3::from_euler_angles(self.roll, self.pitch, self.yaw);
+        let bar = ProgressBar::new((self.width * self.height).into());
         for x in 0..self.width {
             for y in 0..self.height {
                 let xx = (2.0 * ((x as f64 + 0.5) * inv_width) - 1.0)
@@ -49,8 +51,10 @@ impl Camera for EquilinearCamera {
                 let rgb = world.color(ray, 10);
 
                 img.put_pixel(x, self.height - y - 1, rgb);
+                bar.inc(1);
             }
         }
+        bar.finish();
         img
     }
 }
