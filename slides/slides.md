@@ -24,10 +24,6 @@ Beispiele für ,,Interceptable'':
 
 ## Shader Trait
 
-
-was der shader so zum rendern braucht (dh auch Distanz zum Objekt, Winkel zur Oberfläche,  ...)
-</div>
-
 Jeder Shader liefert eine Farbe für einen Lichtstrahl-Objekt-Schnitt.
 
 . . .
@@ -35,26 +31,16 @@ Jeder Shader liefert eine Farbe für einen Lichtstrahl-Objekt-Schnitt.
 Wir haben folgende Shader implementiert :
 
 + Monochrome shader
-+ Additive shader
-+ Multiplicative shader
 + Chess shader
 + Diffuse shader
 + Mirror shader
 + Specular shader
++ Additive shader
++ Multiplicative shader
 
 ---
 
 ## Phong Shader
-
-<div class="notes">
-    Monochrome shader: "einfacher Shader"\\
-    Additive shader: "S1+S2"\\
-    Multiplicative shader: "S1*S2" bzw "Farbe * Shader"\\
-    Chess shader: 2 alternierende subshader\\
-    Diffuse shader: Diffuses Licht\\
-    Mirror shader: Spiegelt das Licht zurück, wie ein Spiegel\\
-    Specular shader: Spiegelungen\\
-</div>
 
 Die std::ops::Add und std::ops::Mul Traits für Box<Shader> erleichtern das Bauen des Phong-Shader :
 
