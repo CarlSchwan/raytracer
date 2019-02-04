@@ -81,15 +81,24 @@
 
     \begin{itemize}[<+->]
         \item Monochrome shader
+        \item Additive shader
+        \item Multiplicative shader
         \item Chess shader
         \item Diffuse shader
         \item Mirror shader
         \item Specular shader
-        \item Multiplicative shader
-        \item Additive shader
     \end{itemize}
 \end{frame}
 \begin{frame}[fragile]{Phong Shader}
+    \pnote{
+        Monochrome shader: "einfacher Shader"\\
+        Additive shader: "S1+S2"\\
+        Multiplicative shader: "S1*S2" bzw "Farbe * Shader"\\
+        Chess shader: 2 alternierende subshader\\
+        Diffuse shader: TODO\\
+        Mirror shader: Spiegelt das Licht zurück\\
+        Specular shader: TODO\\
+    }
     \begin{lstlisting}
 pub fn get_phong(color: Vector3<f64>)
 -> Box<Shader> {
