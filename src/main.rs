@@ -1,34 +1,23 @@
 extern crate image;
 extern crate nalgebra as na;
-extern crate wavefront_obj;
 
-mod camera;
-mod error;
-mod helpers;
-mod intersection;
-mod obj;
-mod ray;
-mod shader;
-mod storage;
-mod world;
-
-use crate::camera::equilinear_camera::*;
-use crate::camera::Camera;
-use crate::error::Error;
-use crate::obj::FileParser;
-use crate::shader::ambient_shader::AmbientShader;
-use crate::shader::mirror_shader::MirrorShader;
-use crate::shader::*;
-use crate::world::light::Light;
-use crate::world::plane::*;
-use crate::world::sphere::*;
+use libraytracing::camera::equilinear_camera::*;
+use libraytracing::camera::Camera;
+use libraytracing::error::Error;
+use libraytracing::obj::FileParser;
+use libraytracing::shader::mirror_shader::MirrorShader;
+use libraytracing::shader::*;
+use libraytracing::world::World;
+use libraytracing::world::light::Light;
+use libraytracing::world::plane::*;
+use libraytracing::world::sphere::*;
+use libraytracing::storage::primitive_storage::PrimitiveStorage;
 use na::Vector3;
 use std::env;
-use std::f64;
-use std::rc::Rc;
-use wavefront_obj::obj::*;
+use std::time::{SystemTime, UNIX_EPOCH};
 
 fn main() -> Result<(), Error> {
+    println!("Start parsing");
     // Parse file given as args
     let mut file_parser = FileParser::new();
 
@@ -36,6 +25,7 @@ fn main() -> Result<(), Error> {
         file_parser.parse(argument)?;
     }
     let mut elements = file_parser.elements;
+    println!("End parsing");
 
     // add some spheres
     let green_shader: Box<Shader> = Box::new(AmbientShader {
@@ -105,18 +95,18 @@ fn main() -> Result<(), Error> {
     lights.push(Light::new(0.0, -10.0, 6.0, Vector3::new(1.0, 0.5, 1.0)));
     lights.push(Light::new(6.0, -10.0, 6.0, Vector3::new(0.5, 1.0, 1.0)));
 
-    let cam = EquilinearCamera {
-        width: 300,
-        height: 150,
-        roll: -0.2, // down-up
-        pitch: 0.2, //right-left
-        yaw: 0.2,   //rotation counterclockwise-clockwise
-        pos: Vector3::new(0.0, 0.0, 0.0),
+    let mut cam = EquilinearCamera {
+        width: 1200,
+        height: 800,
+        roll: 0.0, // down-up
+        pitch: 3.7, //right-left
+        yaw: 0.0,   //rotation counterclockwise-clockwise
+        pos: Vector3::new(200.0, 0.0, 300.0),
         vertical_viewangle: 40.0,
     };
-
-    let w = world::World::new(elements.into_storage(), lights);
-    let image = cam.render(&w);
-    image.save("./output.png").expect("Could not save image!");
+    let w = World::new(Box::new(PrimitiveStorage { elements: elements.elements }), lights);
+    let image = cam.render(&w, true);
+    let name = format!("output{:?}.png", SystemTime::now().duration_since(UNIX_EPOCH)?.as_secs());
+    image.save(name).expect("Could not save image!");
     Ok(())
 }
