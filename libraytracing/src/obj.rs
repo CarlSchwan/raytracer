@@ -91,7 +91,7 @@ impl FileParser {
                                 }
                             }?;
 
-                            self.elements.add(Box::new(Triangle { a, b, c, shader }));
+                            self.elements.add_bounded(Box::new(Triangle { a, b, c, shader }));
                         }
                         _ => ()
                     };

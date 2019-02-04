@@ -4,6 +4,7 @@ use crate::storage::primitive_storage::PrimitiveStorage;
 use crate::storage::Bounded;
 use crate::world::Interceptable;
 use nalgebra::Vector3;
+use crate::helpers::*;
 use std::f64;
 
 pub struct BVStorage {
@@ -14,6 +15,15 @@ pub struct BVStorage {
 }
 
 impl BVStorage {
+	fn from(elements: Vec<Box<Bounded>>, min: Vector3<f64>, max:Vector3<f64>) -> Self {
+		return BVStorage {
+				min,
+				max,
+				left: Box::new(PrimitiveStorage { elements: bounded2interceptable(elements)}),
+				right: Box::new(PrimitiveStorage { elements: Vec::new()}),
+			}
+	}
+	
     pub fn new(elements: Vec<Box<Bounded>>) -> Self {
         let box_min = pointwise_min_list(elements.iter().map(|v| v.get_min()).collect());
         let box_max = pointwise_max_list(elements.iter().map(|v| v.get_max()).collect());
@@ -33,21 +43,20 @@ impl BVStorage {
             }
         }
 
+		if lower_elements.len() == 0 {
+			return Self::from(upper_elements, box_min, box_max);
+		}
+		if upper_elements.len() == 0 {
+			return Self::from(lower_elements, box_min, box_max);
+		}
+
         let left: Box<Interceptable> = if lower_elements.len() < 4 {
-            let mut eles: Vec<Box<Interceptable>> = Vec::new();
-            for element in lower_elements {
-                eles.push(Box::from(element));
-            }
-            Box::new(PrimitiveStorage { elements: eles })
+            Box::new(PrimitiveStorage { elements: bounded2interceptable(lower_elements)})
         } else {
             Box::new(BVStorage::new(lower_elements))
         };
         let right: Box<Interceptable> = if upper_elements.len() < 4 {
-            let mut eles: Vec<Box<Interceptable>> = Vec::new();
-            for element in upper_elements {
-                eles.push(Box::from(element));
-            }
-            Box::new(PrimitiveStorage { elements: eles })
+            Box::new(PrimitiveStorage { elements: bounded2interceptable(upper_elements)})
         } else {
             Box::new(BVStorage::new(upper_elements))
         };

@@ -32,11 +32,3 @@ impl<'a> Collector {
         })
     }
 }
-
-fn bounded2interceptable(bounded: Vec<Box<Bounded>>) -> Vec<Box<Interceptable>> {
-    let mut result = Vec::new();
-    for e in bounded {
-        result.push(Box::from(e));
-    }
-    result
-}

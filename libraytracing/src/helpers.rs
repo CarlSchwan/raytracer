@@ -1,5 +1,7 @@
 use image::{Pixel, Rgb, Rgba};
 use na::{Matrix, Vector3};
+use crate::storage::*;
+use crate::world::*;
 
 // It's easier to do everything with Vectors, and then convert them to colors
 //pub fn color2vector(c : &Rgba<f64>) -> Vector3<f64> {
@@ -30,4 +32,12 @@ pub fn vector2polar<T: na::Real>(v: &Vector3<T>) -> (T, T) {
             -horizontal_angle
         },
     )
+}
+
+pub fn bounded2interceptable(bounded: Vec<Box<Bounded>>) -> Vec<Box<Interceptable>> {
+    let mut result = Vec::new();
+    for e in bounded {
+        result.push(Box::from(e));
+    }
+    result
 }
