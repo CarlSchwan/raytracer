@@ -1,8 +1,10 @@
-\documentclass{beamer}
+\documentclass[aspectratio=169]{beamer}
+
 
 \usepackage[T1]{fontenc}
 \usepackage[ngerman]{babel}
 
+\usepackage[duration=30]{pdfpcnotes}    % https://github.com/cebe/pdfpc-latex-notes 	
 \usepackage{amsmath, amssymb, amstext}
 \usepackage{stmaryrd}
 \usepackage{graphicx}
@@ -49,65 +51,34 @@
     \tableofcontents[hideallsubsections]
 \end{frame}
 
-\section{Projekt Stuckture}
+\section{Projektstruktur}
 \begin{frame}[fragile]{Primitive Objekte: Interceptable Trait}
-    \begin{lstlisting}
-pub trait Interceptable {
-    fn intercept(&self, ray: &Ray)
-        -> Option<(f64, Intersection)>;
-}
-    \end{lstlisting}
-    \begin{lstlisting}
-pub struct Intersection<'a> {
-    pub pos: Vector3<f64>,
-    pub normal_at_surface: Vector3<f64>,
-    pub pos_on_surface: Vector2<f64>,
-    pub shader: &'a Box<Shader>,
-}
-    \end{lstlisting}
-\end{frame}
+    Wir können alles rendern, was den ,,Interceptable''-Trait implementiert : \\
 
-\begin{frame}{Primitive Objekte: Interceptable Trait}
-    \begin{itemize}
-        \item Sphere
-        \item Plane
-        \item Triangle
+    Dieser gibt an, ob, wo und wie das Objekt von einem Lichtstrahl getroffen wird.
+
+    \pause
+    Beispiele für ,,Interceptable'':
+    \begin{itemize}[<+->]
+        \item Kugeln
+        \item Ebenen
+        \item Dreiecke
+        \item Beschleunigungsstrukturen
     \end{itemize}
-    TODO graphics
+
 \end{frame}
 
 
 \begin{frame}[fragile]{Shaders: Shader Trait}
-    \begin{lstlisting}
-pub trait Shader {
-    fn get_appearance_for(
-        &self,
-        intersection_pos: Vector3<f64>,
-        ray_dir: Vector3<f64>,
-        surface_normal: Vector3<f64>,
-        world: &World,
-        surface_pos: Vector2<f64>,
-        recursion_depth: u64,
-    ) -> Vector3<f64>;
-    ...
-    \end{lstlisting}
-\end{frame}
-\begin{frame}[fragile]{Shaders: Shader Trait}
-    \begin{lstlisting}
-    ...
-    fn get_color_for(
-        &self,
-        intersection_pos: Vector3<f64>,
-        ray_dir: Vector3<f64>,
-        surface_normal: Vector3<f64>,
-        world: &World,
-        surface_pos: Vector2<f64>,
-        recursion_depth: u64,
-    ) -> Rgba<u8>;
-}
-    \end{lstlisting}
-\end{frame}
-\begin{frame}{Shaders: Implementierung}
+    \pnote{
+        Interceptable returned halt alles,\\
+        was der shader so zum rendern braucht (dh auch Distanz zum Objekt, Winkel zur Oberfläche,  ...)
+    }
+    Jeder Shader liefert eine Farbe für einen Lichtstrahl-Objekt-Schnitt.
+
+    \pause
+    Wir haben folgende Shader implementiert :
+
     \begin{itemize}[<+->]
         \item Monochrome shader
         \item Chess shader
@@ -196,7 +167,7 @@ impl Add for Box<Shader> {
 \begin{frame}{Störend in Rust}
     \begin{itemize}[<+->]
         \item Mehr Arbeit durch Borrow-Checker/Lifetimes
-        \item Rayon 
+        \item Rayon
     \end{itemize}
 \end{frame}
 \section{Lessons learned}
