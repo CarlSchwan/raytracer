@@ -1,3 +1,3 @@
 #!/bin/bash
 echo stripping $1 from complicated f values ...
-sed -ie 's/\/[0-9]\+//g' $1 
+sed -i -e 's/\/[0-9]\+//g' -e '/mtllib/d' -e '/usemtl/d' "$1"

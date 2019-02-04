@@ -86,7 +86,6 @@ impl FileParser {
                                 if let Some(mat) = last_material {
                                     material_to_shader(mat)
                                 } else { 
-                                    println!("no colour");
                                     Ok(get_phong(Vector3::new(0.0, 1.0, 0.0)))
                                 }
                             }?;
