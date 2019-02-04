@@ -14,9 +14,15 @@ use libraytracing::world::light::Light;
 use libraytracing::world::plane::*;
 use libraytracing::world::sphere::*;
 use libraytracing::storage::primitive_storage::PrimitiveStorage;
-use na::Vector3;
+use na::{Vector3, Rotation3};
 use std::env;
 use std::time::{SystemTime, UNIX_EPOCH};
+use std::f64;
+
+use std::io;           
+use std::io::prelude::*;     
+
+
 
 fn main() -> Result<(), Error> {
     println!("Start parsing");
@@ -67,50 +73,54 @@ fn main() -> Result<(), Error> {
 //        roll: 0.0,
 //        yaw: 0.0,
 //    }));
-	let sp = Box::new(Sphere {
-        center: Vector3::new(-6.0, 11.0, -7.0),
-        radius: 3.0,
-        shader: white_shader,
-        pitch: 0.0,
-        roll: 0.0,
-        yaw: 0.0,
-    });
-    elements.add(sp);
-    let mirror: Box<Shader> = Box::new(MirrorShader {
-        initial_step: 0.001,
-    });
-    elements.add(Box::new(Sphere {
-        center: Vector3::new(9.0, 0.0, 3.0),
-        radius: 7.0,
-        shader: mirror + 0.1 * get_phong(Vector3::new(0.0, 0.0, 1.0)),
-        pitch: 0.0,
-        roll: 0.0,
-        yaw: 0.0,
-    }));
-	let mirror: Box<Shader> = Box::new(MirrorShader {
-        initial_step: 0.001,
-    });
-    elements.add(Box::new(Plane {
-        a: Vector3::new(11.0, 0.0, -16.0),
-        b: Vector3::new(0.0, 0.0, -16.0),
-        c: Vector3::new(0.0, 10.0, -16.0),
-        shader: mirror,
-    }));
-	let mirror: Box<Shader> = Box::new(MirrorShader {
-        initial_step: 0.001,
-    });
-    elements.add(Box::new(Plane {
-        a: Vector3::new(11.0, 0.0, 16.0),
-        b: Vector3::new(0.0, 0.0, 16.0),
-        c: Vector3::new(0.0, 10.0, 16.0),
-        shader: mirror,
-    }));
-    elements.add(Box::new(Plane {
-        a: Vector3::new(11.0, 0.0, 11.0),
-        b: Vector3::new(0.0, 0.0, 11.0),
-        c: Vector3::new(11.0, 0.0, 0.0),
-        shader: bw_shader,
-    }));
+
+
+
+
+//	let sp = Box::new(Sphere {
+//        center: Vector3::new(-6.0, 11.0, -7.0),
+//        radius: 3.0,
+//        shader: white_shader,
+//        pitch: 0.0,
+//        roll: 0.0,
+//        yaw: 0.0,
+//    });
+//    elements.add(sp);
+//    let mirror: Box<Shader> = Box::new(MirrorShader {
+//        initial_step: 0.001,
+//    });
+//    elements.add(Box::new(Sphere {
+//        center: Vector3::new(9.0, 0.0, 3.0),
+//        radius: 7.0,
+//        shader: mirror + 0.1 * get_phong(Vector3::new(0.0, 0.0, 1.0)),
+//        pitch: 0.0,
+//        roll: 0.0,
+//        yaw: 0.0,
+//    }));
+//	let mirror: Box<Shader> = Box::new(MirrorShader {
+//        initial_step: 0.001,
+//    });
+//    elements.add(Box::new(Plane {
+//        a: Vector3::new(11.0, 0.0, -16.0),
+//        b: Vector3::new(0.0, 0.0, -16.0),
+//        c: Vector3::new(0.0, 10.0, -16.0),
+//        shader: mirror,
+//    }));
+//	let mirror: Box<Shader> = Box::new(MirrorShader {
+//        initial_step: 0.001,
+//    });
+//    elements.add(Box::new(Plane {
+//        a: Vector3::new(11.0, 0.0, 16.0),
+//        b: Vector3::new(0.0, 0.0, 16.0),
+//        c: Vector3::new(0.0, 10.0, 16.0),
+//        shader: mirror,
+//    }));
+//    elements.add(Box::new(Plane {
+//        a: Vector3::new(11.0, 0.0, 11.0),
+//        b: Vector3::new(0.0, 0.0, 11.0),
+//        c: Vector3::new(11.0, 0.0, 0.0),
+//        shader: bw_shader,
+//    }));
 
     // add light
     let mut lights = Vec::new();
@@ -127,7 +137,7 @@ fn main() -> Result<(), Error> {
         vertical_viewangle: 130.0,
     };
     
-    let w = world::World::new(elements.into_storage(), lights);
+    let w = World::new(elements.into_storage(), lights);
 	print!("Storage vorbereitet\n");
 	let n = 200;
 	let rot_c = Rotation3::from_euler_angles(0.0, f64::consts::PI * 2.0 / n as f64, 0.0);
@@ -140,7 +150,7 @@ fn main() -> Result<(), Error> {
 		diff_c = rot_c * diff_c;
 		
 		cam.point_at(Vector3::new(0.0, 10.0, 0.0));
-        let image = cam.render(&w);
+        let image = cam.render(&w, false);
         image.save(format!("./output{:09}.png", i))?;
 		print!("\rimage {}/{}", i, n);
 	    io::stdout().flush().ok().expect("Could not flush stdout");

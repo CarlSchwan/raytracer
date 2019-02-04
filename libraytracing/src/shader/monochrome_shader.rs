@@ -6,6 +6,12 @@ pub struct MonochromeShader {
     pub color: Vector3<f64>,
 }
 
+impl MonochromeShader {
+	pub fn new(color: Vector3<f64>) -> Box<Shader> {
+        Box::new(MonochromeShader{color})
+    }
+}
+
 impl Shader for MonochromeShader {
     fn get_appearance_for(
         &self,

@@ -1,7 +1,6 @@
 use crate::error::Error;
 use crate::shader::{
-    diffuse_shader::DiffuseShader, get_phong, mirror_shader::MirrorShader, ambient_shader::AmbientShader,
-    monochrome_shader::MonochromeShader, specular_shader::SpecularShader, Shader,
+    diffuse_shader::DiffuseShader, get_phong, mirror_shader::MirrorShader, monochrome_shader::MonochromeShader, ambient_shader::AmbientShader, specular_shader::SpecularShader, Shader,
 };
 use crate::storage::collector::Collector;
 use crate::world::triangle::Triangle;
