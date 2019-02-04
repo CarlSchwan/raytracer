@@ -42,9 +42,9 @@ pub trait Shader {
 }
 
 pub fn get_phong(color: Vector3<f64>) -> Box<Shader> {
-    let diffuse_shader: Box<Shader> = Box::new(DiffuseShader { color: color });
-    let specular_shader = SpecularShader { alpha: 10.0 };
-    let ambient_shader: Box<Shader> = Box::new(AmbientShader { color: color });
+    let diffuse_shader = DiffuseShader::new(color);
+    let specular_shader = SpecularShader::new(10.0);
+    let ambient_shader = AmbientShader::new(color);
     return 0.5 * diffuse_shader + specular_shader + 0.8 * ambient_shader;
 }
 

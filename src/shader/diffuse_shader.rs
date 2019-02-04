@@ -7,6 +7,12 @@ pub struct DiffuseShader {
     pub color: Vector3<f64>,
 }
 
+impl DiffuseShader {
+    pub fn new(color: Vector3<f64>) -> Box<Shader> {
+        Box::new(DiffuseShader { color } )
+    }
+}
+
 impl Shader for DiffuseShader {
     fn get_appearance_for(
         &self,

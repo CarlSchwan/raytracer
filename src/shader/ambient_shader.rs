@@ -11,6 +11,9 @@ pub struct AmbientShader {
 }
 
 impl AmbientShader {
+    pub fn new(color: Vector3<f64>) -> Box<Shader> {
+        Box::new(AmbientShader{color})
+    }
     fn evaluate_ray(
         &self,
         world: &World,

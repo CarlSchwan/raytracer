@@ -7,6 +7,12 @@ pub struct SpecularShader {
     pub alpha: f64,
 }
 
+impl SpecularShader {
+    pub fn new(alpha: f64) -> Box<Shader> {
+        Box::new(SpecularShader { alpha })
+    }
+}
+
 impl Shader for SpecularShader {
     fn get_appearance_for(
         &self,
