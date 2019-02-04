@@ -1,0 +1,13 @@
+[package]
+name = "libraytracing"
+version = "0.1.0"
+edition = "2018"
+
+[lib]
+name = "libraytracing"
+
+[dependencies]
+image = "*"
+wavefront_obj = { git = "https://gitlab.com/ognarb/wavefront_obj.git" }
+nalgebra = "0.16.12"
+indicatif = "0.11.0"

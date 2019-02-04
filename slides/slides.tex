@@ -35,7 +35,7 @@
 \subtitle{Rust Proseminar}
 
 \author[Sami Shalayel, Daniel Freiermuth, Carl Schwan]{%
-    Autoren: Sami Shalayel, Daniel Freiermuth, Carl Schwan}
+    Autoren: Sami Shalayel, Daniel Freiermuth, Carl Schwan]}
 
 \institute{Universität des Saarlandes}
 \date{\today}
@@ -76,7 +76,6 @@ pub struct Intersection<'a> {
     TODO graphics
 \end{frame}
 
-
 \begin{frame}[fragile]{Shaders: Shader Trait}
     \begin{lstlisting}
 pub trait Shader {
@@ -92,6 +91,7 @@ pub trait Shader {
     ...
     \end{lstlisting}
 \end{frame}
+
 \begin{frame}[fragile]{Shaders: Shader Trait}
     \begin{lstlisting}
     ...
@@ -107,6 +107,7 @@ pub trait Shader {
 }
     \end{lstlisting}
 \end{frame}
+
 \begin{frame}{Shaders: Implementierung}
     \begin{itemize}[<+->]
         \item Monochrome shader
@@ -118,6 +119,7 @@ pub trait Shader {
         \item Additive shader
     \end{itemize}
 \end{frame}
+
 \begin{frame}[fragile]{Phong Shader}
     \begin{lstlisting}
 pub fn get_phong(color: Vector3<f64>)
@@ -135,6 +137,7 @@ Box::new(DiffuseShader { color: color });
 }
     \end{lstlisting}
 \end{frame}
+
 \begin{frame}{Shaders: Shader Trait}
     \begin{columns}[t]
         \column{.5\textwidth}
@@ -146,6 +149,7 @@ Box::new(DiffuseShader { color: color });
         \includegraphics[height=3cm]{example-mirror2}
     \end{columns}
 \end{frame}
+
 \begin{frame}[fragile]{Camera Trait}
     \begin{lstlisting}
 pub trait Camera {
@@ -153,25 +157,38 @@ pub trait Camera {
 }
     \end{lstlisting}
 \end{frame}
+
 \begin{frame}{Cameras: Implemtierung}
     \begin{itemize}[<+->]
         \item Equilinear Camera
         \item Equirectangular Camera
     \end{itemize}
 \end{frame}
+
 \begin{frame}{Wavefront Parser}
     \begin{itemize}[<+->]
         \item Wavefront Obj parser
-        \item Wavefront Mtl parser
+        \item Wavefron Mtl parser
     \end{itemize}
-    Benutzt die wavefront\_obj crate
+    Benutzt die wavefront_obj crate
 \end{frame}
+
 \begin{frame}{Wavefront Parser}
-    \includegraphics[height=3cm]{example-duck}
+    \begin{columns}[t]
+        \column{.5\textwidth}
+        \centering
+        \includegraphics[height=3.5cm]{example-cart} \\
+        \includegraphics[height=3.5cm]{example-duck}
+        \column{.5\textwidth}
+        \centering
+    \end{columns}
+
 \end{frame}
+
 \begin{frame}{Storage und World}
     TODO Explanation storage
 \end{frame}
+
 \section{Rust in unsere Projekt}
 \begin{frame}[fragile]{Operator overload}
     \begin{lstlisting}
@@ -186,12 +203,15 @@ impl Add for Box<Shader> {
 }
     \end{lstlisting}
 \end{frame}
-\begin{frame}{Nalgebra und std::f64}
+
+\begin{frame}{Nalebra und std::f64}
     TODO
 \end{frame}
+
 \begin{frame}{Error Handling}
     TODO
 \end{frame}
+
 \section{Störend in Rust}
 \begin{frame}{Störend in Rust}
     \begin{itemize}[<+->]
@@ -199,7 +219,8 @@ impl Add for Box<Shader> {
         \item Rayon 
     \end{itemize}
 \end{frame}
-\section{Lessons learned}
+
+\section{Lesons learned}
 \begin{frame}{Lesons learned}
     \begin{itemize}[<+->]
         \item Reference in Struct -> Lifetime

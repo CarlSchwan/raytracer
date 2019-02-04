@@ -1,36 +1,25 @@
 extern crate image;
 extern crate nalgebra as na;
-extern crate wavefront_obj;
 
-mod camera;
-mod error;
-mod helpers;
-mod intersection;
-mod obj;
-mod ray;
-mod shader;
-mod storage;
-mod world;
 
-use crate::camera::equilinear_camera::*;
-use crate::camera::Camera;
-use crate::error::Error;
-use crate::obj::FileParser;
-use crate::shader::ambient_shader::AmbientShader;
-use crate::shader::mirror_shader::MirrorShader;
-use crate::shader::*;
-use crate::world::light::Light;
-use crate::world::plane::*;
-use crate::world::sphere::*;
-use na::{Vector3, Rotation3};
+use libraytracing::camera::equilinear_camera::*;
+use libraytracing::camera::Camera;
+use libraytracing::error::Error;
+use libraytracing::obj::FileParser;
+use libraytracing::shader::mirror_shader::MirrorShader;
+use libraytracing::shader::ambient_shader::AmbientShader;
+use libraytracing::shader::*;
+use libraytracing::world::World;
+use libraytracing::world::light::Light;
+use libraytracing::world::plane::*;
+use libraytracing::world::sphere::*;
+use libraytracing::storage::primitive_storage::PrimitiveStorage;
+use na::Vector3;
 use std::env;
-use std::f64;
-use std::rc::Rc;
-use wavefront_obj::obj::*;
-use std::io;           
-use std::io::prelude::*;                                                                                                                       
+use std::time::{SystemTime, UNIX_EPOCH};
 
 fn main() -> Result<(), Error> {
+    println!("Start parsing");
     // Parse file given as args
     let mut file_parser = FileParser::new();
 
@@ -38,7 +27,8 @@ fn main() -> Result<(), Error> {
         file_parser.parse(argument)?;
     }
     let mut elements = file_parser.elements;
-	print!("Parsen abgeschlossen\n");
+
+    println!("End parsing");
 
     // add some spheres
 //    let gr_shader: Box<Shader> = Box::new(AmbientShader {
