@@ -73,12 +73,7 @@ impl FileParser {
                             let vertices_c = object.vertices[w.0];
                             let c = Vector3::new(vertices_c.x, vertices_c.y, vertices_c.z);
 
-                            let shader = if let Some(name) = &geometry.material_name {
-                                let mat = self.materials.get(name).expect("Material don't exist");
-                                material_to_shader(mat)
-                            } else {
-                                Ok(get_phong(Vector3::new(0.0, 1.0, 0.0)))
-                            }?;
+                            let shader = get_phong(Vector3::new(0.0, 1.0, 0.0));
 
                             self.elements
                                 .add_bounded(Box::new(Triangle { a, b, c, shader }));
@@ -112,7 +107,7 @@ fn material_to_shader(material: &Material) -> Result<Box<Shader>, Error> {
         color: color_to_vec(material.color_diffuse),
     });
     let specular_shader = SpecularShader { alpha: 10.0 }; // TODO FIXME use material.color_diffuse
-    let ambient_shader: Box<Shader> = Box::new(AmbientShader {
+    let ambient_shader: Box<Shader> = Box::new(MonochromeShader {
         color: color_to_vec(material.color_ambient),
     });
     match material.illumination {

@@ -30,7 +30,7 @@ impl World {
             intersection.get_color(ray.dir.into_inner(), self, recursion_depth)
         } else {
             // background color
-            Rgba([0, 0, 0, 255])
+            Rgba([25, 25, 25, 255])
         }
     }
 
@@ -39,7 +39,7 @@ impl World {
             // touch something
             intersection.get_appearance(ray.dir.into_inner(), self, recursion_depth)
         } else {
-            Vector3::new(0.0, 0.0, 0.0)
+            Vector3::new(0.1, 0.1, 0.1)
         }
     }
 

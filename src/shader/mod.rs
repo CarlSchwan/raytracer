@@ -45,6 +45,7 @@ pub fn get_phong(color: Vector3<f64>) -> Box<Shader> {
     let diffuse_shader: Box<Shader> = Box::new(DiffuseShader { color: color });
     let specular_shader = SpecularShader { alpha: 10.0 };
     let ambient_shader: Box<Shader> = Box::new(AmbientShader { color: color });
+    //let ambient_shader: Box<Shader> = Box::new(MonochromeShader { color: Vector3::new(0.1, 0.1, 0.1) });
     return 0.5 * diffuse_shader + specular_shader + 0.8 * ambient_shader;
 }
 
