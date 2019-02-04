@@ -6,6 +6,7 @@ use libraytracing::camera::Camera;
 use libraytracing::error::Error;
 use libraytracing::obj::FileParser;
 use libraytracing::shader::mirror_shader::MirrorShader;
+use libraytracing::shader::ambient_shader::AmbientShader;
 use libraytracing::shader::*;
 use libraytracing::world::World;
 use libraytracing::world::light::Light;
