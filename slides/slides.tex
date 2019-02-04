@@ -4,11 +4,11 @@
 \usepackage[T1]{fontenc}
 \usepackage[ngerman]{babel}
 
-\usepackage[duration=30]{pdfpcnotes}    % https://github.com/cebe/pdfpc-latex-notes 	
+\usepackage[duration=30]{pdfpcnotes}    % https://github.com/cebe/pdfpc-latex-notes
 \usepackage{amsmath, amssymb, amstext}
 \usepackage{stmaryrd}
 \usepackage{graphicx}
-\usepackage{xcolor}
+\usepackage{xcolor, framed}
 \usepackage{tikz}
 \usepackage{appendixnumberbeamer}
 \usepackage{enumerate}
@@ -95,25 +95,22 @@
         Additive shader: "S1+S2"\\
         Multiplicative shader: "S1*S2" bzw "Farbe * Shader"\\
         Chess shader: 2 alternierende subshader\\
-        Diffuse shader: TODO\\
-        Mirror shader: Spiegelt das Licht zurück\\
-        Specular shader: TODO\\
+        Diffuse shader: Diffuses Licht\\
+        Mirror shader: Spiegelt das Licht zurück, wie ein Spiegel\\
+        Specular shader: Spiegelungen\\
     }
-    \begin{lstlisting}
-pub fn get_phong(color: Vector3<f64>)
--> Box<Shader> {
-    let diffuse_shader: Box<Shader> =
-Box::new(DiffuseShader { color: color });
-    let specular_shader = SpecularShader
-{ alpha: 10.0 };
-    let ambient_shader: Box<Shader> =
-    Box::new(MonochromeShader {
-        color: Vector3::new(0.1, 0.1, 0.1),
-    });
-    return 0.5 * diffuse_shader + specular_shader
-+ 0.5 * ambient_shader;
-}
-    \end{lstlisting}
+    Die std::ops::Add und std::ops::Mul Traits für Box<Shader> erleichtern das Bauen des Phong-Shader :
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{pub} \KeywordTok{fn}\NormalTok{ get_phong(color: Vector3<}\DataTypeTok{f64}\NormalTok{>) -> }\DataTypeTok{Box}\NormalTok{<Shader> }\OperatorTok{\{}
+    \KeywordTok{let}\NormalTok{ diffuse_shader = }\PreprocessorTok{DiffuseShader::}\NormalTok{new(color);}
+    \KeywordTok{let}\NormalTok{ specular_shader = }\PreprocessorTok{SpecularShader::}\NormalTok{new(}\DecValTok{10.0}\NormalTok{);}
+    \KeywordTok{let}\NormalTok{ ambient_shader = }\PreprocessorTok{AmbientShader::}\NormalTok{new(color);}
+    \KeywordTok{return} \DecValTok{0.5}\NormalTok{ * diffuse_shader + specular_shader + }\DecValTok{0.8}\NormalTok{ * ambient_shader;}
+\OperatorTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
 \end{frame}
 \begin{frame}{Shaders: Shader Trait}
     \begin{columns}[t]
