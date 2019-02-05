@@ -26,6 +26,10 @@ author: Sami Shalayel, Daniel Freiermuth, Carl Schwan
 
 * Camera : Projektion der ,,Welt''
 
+. . .
+
+* BVStorage : Beschleunigungsstruktur
+
 # Projektstruktur : Interceptable Trait
 
 ## Interceptable Trait
@@ -105,8 +109,6 @@ Wir haben folgende Shader implementiert :
 . . .
 
 + Phong shader : s. Projektbeschreibung, Kombination aus Specular, Ambient und Diffuse
-
-# Shader Trait : Phong Shader
 
 # Beispiel
 
@@ -249,6 +251,14 @@ pub enum Error {
 ```
 
 # Benutzte Rustfeatures : Trait Bounds
+
+* Für Beschleunigungsstrukturen müssen Objekte beschränkt sein, aber nicht alle Interceptable sind beschränkt
+  ```rust
+pub trait Bounded: Interceptable {
+    fn get_min(&self) -> Vector3<f64>;
+    fn get_max(&self) -> Vector3<f64>;
+}
+```
 
 
 # Rust Downsides
