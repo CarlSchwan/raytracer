@@ -247,6 +247,8 @@ fn main() {
 
 # Benutzte Rustfeatures : Error Handling
 
+## Error Handling
+
 * Die Main kann einen `Result<T, Err>` zurückgeben
 
 . . .
@@ -269,6 +271,8 @@ pub enum Error {
 ```
 
 # Benutzte Rustfeatures : Trait Bounds
+
+## Trait Bounds
 
 * Für Beschleunigungsstrukturen müssen Objekte beschränkt sein, aber nicht alle Interceptable sind beschränkt
   ```rust
