@@ -134,7 +134,7 @@ fn main() -> Result<(), Error> {
     // add light
     let mut lights = Vec::new();
     lights.push(Light::new(100.0, 100.0, -60.0, Vector3::new(1.0, 1.0, 1.0)));
-    //lights.push(Light::new(6.0, -10.0, 6.0, Vector3::new(0.5, 1.0, 1.0)));
+    lights.push(Light::new(6.0, -10.0, 6.0, Vector3::new(0.5, 1.0, 1.0)));
 
     let mut cam = EquilinearCamera {
         width: 500,
