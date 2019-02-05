@@ -234,7 +234,7 @@ fn main() {
 . . .
 
 * `try!(...)` bzw `?` :
-  ersetzt ein Result durch ihren Wert oder returned den Error
+  ersetzt ein Result durch ihren Wert oder gibt den Fehler zurück
 
 . . .
 
@@ -355,4 +355,4 @@ impl S {
 
 # Fragen?
 
-TODO Video
+![Ein Kugelfisch](./kugelfisch.png)
