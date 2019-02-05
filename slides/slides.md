@@ -12,6 +12,12 @@ author: Sami Shalayel, Daniel Freiermuth, Carl Schwan
 
 # Projektstruktur
 
+![](diagram.png)
+
+Quelle : Wikipedia
+
+# Projektstruktur
+
 * Objekte und Gruppen von Objekten sind ,,Interceptable''
 
 . . .
@@ -364,3 +370,5 @@ impl S {
 # Fragen?
 
 ![Ein Kugelfisch bestehend aus 1 Mio. Dreiecke](./kugelfischhq.png)
+
+Quelle des Kugelfischs : https://www.artec3d.com/de/3d-models/puffer-fish
