@@ -150,7 +150,15 @@ Dafür haben wir den wavefront\_obj crate leicht verändert.
 
 ## Beispiel
 
-\includegraphics[height=3cm]{example-duck}
+\begin{columns}[t]
+    \column{.5\textwidth}
+    \centering
+    \includegraphics[height=3cm]{example-cart} \\
+    \includegraphics[height=3cm]{example-duck}
+    \column{.5\textwidth}
+    \centering
+    \includegraphics[height=3cm]{example-blowfish}
+\end{columns}
 
 # Benutzte Rustfeatures : Operator Überladungen & Dynamic Dispatch
 
