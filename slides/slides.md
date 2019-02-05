@@ -3,11 +3,41 @@ title: Raytracing - Rust Proseminar
 author: Sami Shalayel, Daniel Freiermuth, Carl Schwan
 ---
 
+# Overview
+
+* Projektstruktur
+* Rustfeatures
+* Downsides
+* Lessons learned
+
+# Projektstruktur
+
+* Objekte und Gruppen von Objekten sind ,,Interceptable''
+
+. . .
+
+* Aussehen sind Shader
+
+. . .
+
+* Alles liegt in der ,,Welt''
+
+. . .
+
+* Camera : Projektion der ,,Welt''
+
 # Projektstruktur : Interceptable Trait
 
 ## Interceptable Trait
 
 Wir können alles rendern, was den ,,Interceptable''-Trait implementiert :
+
+```rust
+pub trait Interceptable {
+    fn intercept(&self, ray: &Ray)
+      -> Option<(f64, Intersection)>;
+}
+```
 
 . . .
 
@@ -40,6 +70,18 @@ Jeder Shader liefert eine Farbe für einen Lichtstrahl-Objekt-Schnitt.
 
 . . .
 
+```rust
+pub trait Shader {
+  fn get_appearance_for(
+    &self, int_pos: Vector3<f64>, ray_dir: Vector3<f64>,
+    surface_normal: Vector3<f64>, world: &World,
+    uv_pos: Vector2<f64>, rec_depth: f64,
+  ) -> Vector3<f64>;
+}
+```
+
+. . .
+
 Wir haben folgende Shader implementiert :
 
 + Monochrome shader : Nur eine Farbe
@@ -58,38 +100,13 @@ Wir haben folgende Shader implementiert :
 
 . . .
 
-
-Und können sie kombinieren :
-
-+ Additive shader (für +)
-
-. . .
-
-+ Multiplicative shader (für \*)
-
-. . .
-
 + Chess shader : 2 abwechselnde Shader
 
-# Shader Trait : Phong Shader
-
-## Phong Shader
-
-Die std::ops::Add und std::ops::Mul Traits für `Box<Shader>` erleichtern das Bauen des Phong-Shader :
-
 . . .
 
++ Phong shader : s. Projektbeschreibung, Kombination aus Specular, Ambient und Diffuse
 
-```rust
-pub fn get_phong(color: Vector3<f64>) -> Box<Shader> {
-    let diffuse_shader = DiffuseShader::new(color);
-    let specular_shader = SpecularShader::new(10.0);
-    let ambient_shader = AmbientShader::new(color);
-    return 0.5 * diffuse_shader
-        + specular_shader
-        + 0.8 * ambient_shader;
-}
-```
+# Shader Trait : Phong Shader
 
 # Beispiel
 
@@ -103,7 +120,7 @@ pub fn get_phong(color: Vector3<f64>) -> Box<Shader> {
     \includegraphics[height=3cm]{example-mirror2}
 \end{columns}
 
-# Projektstruktur : Camera Trait & Wavefront Parser
+# Projektstruktur : Camera Trait
 
 ## Camera Trait
 
@@ -118,19 +135,16 @@ pub trait Camera {
 + Equilinear Camera : ,,Normale'' Kamera
 + Equirectangular Camera : ,,360 Grad'' Kamera
 
-. . .
+# Projektstruktur : Wavefront Parser
 
 ## Wavefront Parser
 
-. . .
-
 3D Objekte werden als Obj-Wavefront format eingelesen und geparst.
-
-. . .
 
 Dafür haben wir den wavefront\_obj crate leicht verändert.
 
-# Projektstruktur : Beispiel
+. . .
+
 
 ## Beispiel
 
@@ -151,6 +165,26 @@ impl Add for Box<Shader> {
             shader2: other,
         })
     }
+}
+```
+
+# Benutzte Rustfeatures : Phong Shader
+
+## Phong Shader
+
+Die std::ops::Add und std::ops::Mul Traits für `Box<Shader>` erleichtern das Bauen des Phong-Shader :
+
+. . .
+
+
+```rust
+pub fn get_phong(color: Vector3<f64>) -> Box<Shader> {
+    let diffuse_shader = DiffuseShader::new(color);
+    let specular_shader = SpecularShader::new(10.0);
+    let ambient_shader = AmbientShader::new(color);
+    return 0.5 * diffuse_shader
+        + specular_shader
+        + 0.8 * ambient_shader;
 }
 ```
 
@@ -187,15 +221,13 @@ Alles was man braucht um mit floats zu arbeiten :
 * aber auch Trigonometrische Funktionen wie cos, sin, tanh, ...
 ```rust
 fn main() {
-    println!("Hello {}!", 3.14f64.cos());
+    println!("Hello {}!", f64::consts::PI.cos());
 }
 ```
 
 # Benutzte Rustfeatures : Error Handling
 
-In Rust wird oft `Result<T, Err>` benutzt.
-
-* Sogar die Main kann einen `Result<T, Err>` zurückgeben
+* Die Main kann einen `Result<T, Err>` zurückgeben
 
 . . .
 
@@ -206,6 +238,17 @@ In Rust wird oft `Result<T, Err>` benutzt.
 
 
 * Eigener Fehlerenum, dass die eigenen library-Fehler wrappt
+
+  ```rust
+pub enum Error {
+    ParseError(wavefront_obj::ParseError),
+    Io(io::Error),
+    Time(std::time::SystemTimeError),
+    Error(String),
+}
+```
+
+# Benutzte Rustfeatures : Trait Bounds
 
 
 # Rust Downsides
@@ -224,17 +267,81 @@ In Rust wird oft `Result<T, Err>` benutzt.
 
 + `cargo bench` : nur als nightly, kann nur Untercrates benchen
 
+# Rust Downsides #2
+ 
+```rust
+trait Bounded:Interceptable { ... }
+fn main() {
+    let obj : Vec<Box<Bounded>> = vec![Box::new(S {})];
+    let obj2 : Vec<Box<Interceptable>> = obj;
+}
+```
+
 . . .
 
-+ Keine ,,Upgrades'' von Trait zu Super-Traits möglich : man muss From und Into implementieren
+```
+error[E0308]: mismatched types
+ --> src/main.rs:3:42
+ |
+ |     let obj2 : Vec<Box<Interceptable>> = obj;
+ |                                          ^^^
+ | expected trait `Interceptable`, found trait `Bounded`
+ |
+ = note: expected type `Vec<Box<dyn Interceptable>>`
+             found type `Vec<Box<dyn Bounded>>`
+```
+
+. . .
+
+Keine ,,Upgrades'' von Trait zu Super-Traits möglich : man muss From und Into implementieren
+
+
+# Rust Downsides #2
+
+```rust
+fn main() {
+    let obj : Vec<Box<Bounded>> = vec![Box::new(S {})];
+    //let obj2 : Vec<Box<Interceptable>> = obj;
+    let obj2 : Vec<Box<Interceptable>> = from(obj);
+}
+impl From<Box<Bounded>> for Box<Interceptable> {
+    fn from(x: Box<Bounded>) -> Self {
+        Box::new(W{s:x})
+    }
+}
+fn from(v: Vec<Box<Bounded>>) -> Vec<Box<Interceptable>> {
+    let mut r: Vec<Box<Interceptable>> = Vec::new();
+    for x in v {
+        r.push(Box::from(x))
+    }
+    r
+}
+```
 
 # Lessons learned
 
-+ Wenn man Referenzen in Structs benutzt, braucht man Lifetimes
++ Structs mit Referenzen brauchen Lifetimes
+
+. . .
 
 + Serde
 
-+ Um Felder von Structs moven zu können, muss man zuerst den struct zerstören
+. . .
+
++ Swapping mit
+  ```rust
+oldvalue =
+std::mem::replace(&mut my_struct.var, new_value)
+```
+
+. . .
+
++ Konsumieren von structs
+  ```rust
+impl S {
+    fn f(self) -> Another_S { ... }
+}
+```
 
 # Fragen?
 
