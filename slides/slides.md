@@ -355,4 +355,4 @@ impl S {
 
 # Fragen?
 
-![Ein Kugelfisch](./kugelfisch.png)
+![Ein Kugelfisch bestehend aus 1 Mio. Dreiecke](./kugelfischhq.png)
