@@ -108,7 +108,11 @@ Wir haben folgende Shader implementiert :
 
 . . .
 
-+ Phong shader : s. Projektbeschreibung, Kombination aus Specular, Ambient und Diffuse
++ Phong shader : Kombination aus Specular, Ambient und Diffuse
+
+. . .
+
++ Ambient Shader : Indirekte Beleuchtung
 
 # Beispiel
 
