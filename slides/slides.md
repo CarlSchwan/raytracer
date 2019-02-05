@@ -195,7 +195,7 @@ fn main() {
 
 In Rust wird oft `Result<T, Err>` benutzt.
 
-* In Rust kann die Main einen `Result<T, Err>` zurückgeben
+* Sogar die Main kann einen `Result<T, Err>` zurückgeben
 
 . . .
 
@@ -212,7 +212,7 @@ In Rust wird oft `Result<T, Err>` benutzt.
 
 + erzwungene einheitliche Pointer : kein Vertauschen zwischen `Box<T>` und `&T` möglich
 
-  Zum Beispiel: Add hätte man 4-mal implementieren müssen
+  Zum Beispiel: Um eine Box zu teilen müsste man mit `&Box<T>` arbeiten
 
 . . .
 
@@ -224,11 +224,18 @@ In Rust wird oft `Result<T, Err>` benutzt.
 
 + `cargo bench` : nur als nightly, kann nur Untercrates benchen
 
-# Lessons learned
-+ Reference in Struct -> Lifetime
-+ Serde
-+ ...
+. . .
 
-# Frage?
++ Keine ,,Upgrades'' von Trait zu Super-Traits möglich : man muss From und Into implementieren
+
+# Lessons learned
+
++ Wenn man Referenzen in Structs benutzt, braucht man Lifetimes
+
++ Serde
+
++ Um Felder von Structs moven zu können, muss man zuerst den struct zerstören
+
+# Fragen?
 
 TODO Video
