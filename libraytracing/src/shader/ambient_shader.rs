@@ -29,8 +29,8 @@ impl AmbientShader {
         };
         if let Some((dist, int)) = world.intercept(&ray) {
             (int.get_appearance(ray.dir.into_inner(), world, recursion_depth / 5.0)
-                * (1.0 / (3.0 + dist / 2.0))
-                * (1.0 / (3.0 + dist / 2.0))
+                * (1.0 / (20.0+ dist / 2.0))
+                * (1.0 / (20.0 + dist / 2.0))
                 * ray.dir.dot(&surface_normal.normalize()))
             .component_mul(&self.color)
         } else {
@@ -96,6 +96,6 @@ impl Shader for AmbientShader {
                 surface_normal,
             );
         }
-        appereance
+        appereance * 40.0
     }
 }
