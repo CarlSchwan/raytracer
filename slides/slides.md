@@ -12,6 +12,12 @@ author: Sami Shalayel, Daniel Freiermuth, Carl Schwan
 
 # Projektstruktur
 
+![](diagram.png)
+
+Quelle : Wikipedia
+
+# Projektstruktur
+
 * Objekte und Gruppen von Objekten sind ,,Interceptable''
 
 . . .
@@ -241,6 +247,8 @@ fn main() {
 
 # Benutzte Rustfeatures : Error Handling
 
+## Error Handling
+
 * Die Main kann einen `Result<T, Err>` zurückgeben
 
 . . .
@@ -263,6 +271,8 @@ pub enum Error {
 ```
 
 # Benutzte Rustfeatures : Trait Bounds
+
+## Trait Bounds
 
 * Für Beschleunigungsstrukturen müssen Objekte beschränkt sein, aber nicht alle Interceptable sind beschränkt
   ```rust
@@ -368,3 +378,5 @@ impl S {
 # Fragen?
 
 ![Ein Kugelfisch bestehend aus 1 Mio. Dreiecke](./kugelfischhq.png)
+
+Quelle des Kugelfischs : https://www.artec3d.com/de/3d-models/puffer-fish
